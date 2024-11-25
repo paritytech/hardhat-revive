@@ -33,13 +33,13 @@ task("compile", "Compile Solidity files to PolkaVM").setAction(
 
 async function compile(fileName: string, hre: HardhatRuntimeEnvironment) {
 
-    const output = JSON.parse('{"__format": "hh-resolc-artifact-1", "contractName": "", "sourceName": "", "abi": "", "bytecode": ""}'); // Boilerplate JSON
+    const output = JSON.parse('{"__format": "hh-resolc-artifact-1", "contractName": "", "sourceName": "", "abi": "", "bytecode": "", "deployedBytecode": ""}'); // Boilerplate JSON
     const file = path.basename(fileName); // Name of the .sol file
 
     const possiblyContractName = readFileSync(fileName, 'utf8').match(/contract\s+([a-zA-Z0-9_]+)/); // Attempt to retrieve the Smart Contract's name
 
     const contractName = possiblyContractName && possiblyContractName[1] ? possiblyContractName[1] : ""; // Just the contract name, gotta add an error here
-    
+
     console.log(`Compiling contract: ${contractName}`);
 
     // Run the compiler
@@ -67,7 +67,7 @@ async function compile(fileName: string, hre: HardhatRuntimeEnvironment) {
     await mkdir(outPath, { recursive: true });
 
     writeFileSync(join(outPath.slice(0, -4) + '.sol', contractName + '.json'), JSON.stringify(output, null, 2));
-    
+
     return { success: true };
 
 }
