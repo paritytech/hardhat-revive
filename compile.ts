@@ -56,6 +56,7 @@ async function compile(fileName: string, hre: HardhatRuntimeEnvironment) {
 
     output["abi"] = entry.abi;
     output["bytecode"] = entry.evm.bytecode.object;
+    output["deployedBytecode"] = entry.evm["deployedBytecode"].object;
 
     const outPath = join(hre.config.paths.artifacts, 'contracts', file); // Path ending in .json  
 
