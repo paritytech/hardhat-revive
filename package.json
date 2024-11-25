@@ -1,0 +1,19 @@
+{
+  "name": "hardhat-revive",
+  "version": "0.0.1",
+  "license": "AGPL-3.0",
+  "packageManager": "yarn@4.4.1",
+  "author": {
+    "name": "Alberto Nicolás Penayo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bee344/hardhat-revive.git"
+  },
+  "bugs": "https://github.com/bee344/hardhat-revive/issues",
+  "dependencies": {
+    "@parity/revive": "^0.0.5",
+    "fast-glob": "^3.3.2",
+    "hardhat": "^2.22.15"
+  }
+}
