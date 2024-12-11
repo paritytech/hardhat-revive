@@ -6,14 +6,12 @@
   "author": {
     "name": "Alberto Nicolás Penayo"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bee344/hardhat-revive.git"
   },
-  "bugs": "https://github.com/bee344/hardhat-revive/issues",
-  "dependencies": {
-    "@parity/revive": "^0.0.5",
-    "fast-glob": "^3.3.2",
-    "hardhat": "^2.22.15"
-  }
+  "bugs": "https://github.com/bee344/hardhat-revive/issues"
 }
