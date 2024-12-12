@@ -20,7 +20,7 @@ import { defaultResolcConfig, RESOLC_ARTIFACT_FORMAT_VERSION, RESOLC_COMPILER_PA
 import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { Artifacts } from 'hardhat/internal/artifacts';
 import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, HardhatRuntimeEnvironment, RunSuperFunction, SolcBuild, TaskArguments } from 'hardhat/types';
-import { getArtifactFromContractOutput, pluralize } from './utils';
+import { getArtifactFromContractOutput, pluralize, updateDefaultCompilerConfig } from './utils';
 import { compile } from './compile';
 import chalk from 'chalk';
 import fs from 'fs';
@@ -63,7 +63,13 @@ extendEnvironment((hre) => {
         hre.config.paths.artifacts = artifactsPath;
         hre.config.paths.cache = cachePath;
         (hre as any).artifacts = new Artifacts(artifactsPath);
+        hre.config.solidity.compilers.forEach(async (compiler) =>
+            updateDefaultCompilerConfig({ compiler }, hre.config.resolc),
+        );
 
+        for (const [file, compiler] of Object.entries(hre.config.solidity.overrides)) {
+            updateDefaultCompilerConfig({ compiler, file }, hre.config.resolc);
+        }
     }
 });
 
@@ -312,7 +318,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper
 });
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
-    if (hre.network.polkavm !== true) {
+    if (hre.network.polkavm === true) {
         return await runSuper(taskArgs);
     }
 
