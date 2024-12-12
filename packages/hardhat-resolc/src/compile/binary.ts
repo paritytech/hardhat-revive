@@ -1,8 +1,9 @@
 import { exec } from 'child_process';
 import { ResolcConfig } from '../types';
+import { CompilerInput } from 'hardhat/types';
 
 export async function compileWithBinary(
-    input: any,
+    input: CompilerInput,
     config: ResolcConfig,
 ): Promise<any> {
     const {
@@ -30,30 +31,7 @@ export async function compileWithBinary(
         compilerPath
     } = config.settings;
 
-    let processCommand = `${compilerPath} 
-    ${basePath ? `--base-path ${basePath}` : ''}
-    ${includePath ? `--include-path ${includePath}` : ''}
-    ${allowPaths ? `--allow-paths ${allowPaths}` : ''}
-    ${outputDir ? `--output-dir ${outputDir}` : ''}
-    ${overwrite ? '--overwrite' : ''}
-    ${optimizer?.enabled ? `--optimization ${optimizer.parameters}` : ''}
-    ${optimizer?.fallbackOz ? '--fallback-Oz' : ''}
-    ${solcPath ? `--solc ${solcPath}` : ''}
-    ${evmVersion ? `--evm-version ${evmVersion}` : ''}
-    ${combinedJson ? `--combined-json ${combinedJson}` : ''}
-    ${standardJson ? `--standard-json ${standardJson}` : ''}
-    ${detectMissingLibraries ? '--detect-missing-libraries' : ''}
-    ${yul ? '--yul' : ''}
-    ${llvmIR ? '--llvm-ir' : ''}
-    ${forceEVMLA ? '--force-evmla' : ''}
-    ${metadataHash ? `--metadata-hash ${metadataHash}` : ''}
-    ${asm ? '--asm' : ''}
-    ${bin ? '--bin' : ''}
-    ${suppressWarnings ? `--suppress-warnings ${suppressWarnings}` : ''}
-    ${debugOutputDir ? `--debug-output-dir ${debugOutputDir}` : ''}
-    ${llvmVerifyEach ? '--llvm-verify-each' : ''}
-    ${llvmDebugLogging ? '--llvm-debug-logging' : ''}
-    `;
+    let processCommand = `${compilerPath} ${basePath ? `--base-path ${basePath}` : ''} ${includePath ? `--include-path ${includePath}` : ''} ${allowPaths ? `--allow-paths ${allowPaths}` : ''} ${outputDir ? `--output-dir ${outputDir}` : ''} ${overwrite ? '--overwrite' : ''} ${optimizer?.enabled && config.compilerSource !== 'binary' ? `--optimization ${optimizer.parameters}` : ''} ${optimizer?.fallbackOz ? '--fallback-Oz' : ''} ${solcPath ? `--solc ${solcPath}` : ''} ${evmVersion ? `--evm-version ${evmVersion}` : ''} ${combinedJson ? `--combined-json ${combinedJson}` : ''} ${standardJson ? `--standard-json` : ''} ${detectMissingLibraries ? '--detect-missing-libraries' : ''} ${yul ? '--yul' : ''} ${llvmIR ? '--llvm-ir' : ''} ${forceEVMLA ? '--force-evmla' : ''} ${metadataHash ? `--metadata-hash ${metadataHash}` : ''} ${asm ? '--asm' : ''} ${bin ? '--bin' : ''} ${suppressWarnings ? `--suppress-warnings ${suppressWarnings}` : ''} ${debugOutputDir ? `--debug-output-dir ${debugOutputDir}` : ''} ${llvmVerifyEach ? '--llvm-verify-each' : ''} ${llvmDebugLogging ? '--llvm-debug-logging' : ''}`;
 
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
