@@ -28,15 +28,15 @@ export async function compile(resolcConfig: ResolcConfig, input: CompilerInput) 
 export class BinaryCompiler implements ICompiler {
     constructor(public config: ResolcConfig) {}
 
-    public async compile(input: CompilerInput, config: ResolcConfig) {
-        return await compileWithBinary(input, config);
+    public async compile(input: CompilerInput) {
+        return await compileWithBinary(input, this.config);
     }
 }
 
 export class RemixCompiler implements ICompiler {
     constructor(public config: ResolcConfig) {}
 
-    public async compile(input: CompilerInput, config: ResolcConfig) {
+    public async compile(input: CompilerInput) {
         return await compileWithRemix(input, this.config);
     }
 }
