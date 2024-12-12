@@ -1,4 +1,4 @@
-import solc from 'solc';
+import * as solc from 'solc';
 import path from 'path'
 import { existsSync, readFileSync } from 'fs'
 import { ResolcConfig, SolcError, SolcInput, SolcOutput } from "../types";
@@ -8,19 +8,8 @@ import { promisify } from 'util';
 const exec = promisify(execCb);
 
 export function resolveInputs(sources: SolcInput): SolcInput {
-    const input = {
-        language: 'Solidity',
-        sources,
-        settings: {
-            outputSelection: {
-                '*': {
-                    '*': ['evm.bytecode.object'],
-                },
-            },
-        },
-    }
-
-    const out = solc.compile(JSON.stringify(input), {
+    
+    const out = solc.compile((JSON.stringify(sources)), {
         import: (path: string) => {
             return {
                 contents: readFileSync(tryResolveImport(path), 'utf8'),
