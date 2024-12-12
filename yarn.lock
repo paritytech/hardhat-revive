@@ -1985,6 +1985,7 @@ __metadata:
     hardhat: "npm:^2.22.17"
     mocha: "npm:11.0.1"
     sinon: "npm:^19.0.2"
+    solc: "npm:^0.8.28"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.7.2"
   languageName: unknown
