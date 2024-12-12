@@ -19,7 +19,7 @@ export async function compileWithBinary(
         detectMissingLibraries,
         yul,
         llvmIR,
-        forceEvmla,
+        forceEVMLA,
         metadataHash,
         asm,
         bin,
@@ -45,7 +45,7 @@ export async function compileWithBinary(
     ${detectMissingLibraries ? '--detect-missing-libraries' : ''}
     ${yul ? '--yul' : ''}
     ${llvmIR ? '--llvm-ir' : ''}
-    ${forceEvmla ? '--force-evmla' : ''}
+    ${forceEVMLA ? '--force-evmla' : ''}
     ${metadataHash ? `--metadata-hash ${metadataHash}` : ''}
     ${asm ? '--asm' : ''}
     ${bin ? '--bin' : ''}
