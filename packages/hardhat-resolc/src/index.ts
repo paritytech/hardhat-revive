@@ -24,6 +24,7 @@ import { getArtifactFromContractOutput, pluralize } from './utils';
 import { compile } from './compile';
 import chalk from 'chalk';
 import fs from 'fs';
+import './type-extensions';
 import { ReviveCompilerInput } from './types';
 
 const logDebug = debug('hardhat:core:tasks:compile');
