@@ -16,7 +16,7 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 import debug from 'debug';
 import { SolcMultiUserConfigExtractor, SolcSoloUserConfigExtractor, SolcStringUserConfigExtractor, SolcUserConfigExtractor } from './config-extractor';
-import { defaultResolcConfig, RESOLC_ARTIFACT_FORMAT_VERSION, RESOLC_COMPILER_PATH_VERSION, TASK_UPDATE_SOLIDITY_COMPILERS } from './constants';
+import { defaultRemixResolcConfig, defaultBinaryResolcConfig, RESOLC_ARTIFACT_FORMAT_VERSION } from './constants';
 import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { Artifacts } from 'hardhat/internal/artifacts';
 import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, HardhatRuntimeEnvironment, RunSuperFunction, SolcBuild, TaskArguments } from 'hardhat/types';
@@ -35,15 +35,23 @@ const extractors: SolcUserConfigExtractor[] = [
     new SolcMultiUserConfigExtractor(),
 ];
 
-// TODO Check if all necessary configs are being extracted
 extendConfig((config, userConfig) => {
-    defaultResolcConfig.version = userConfig.resolc?.settings?.compilerPath ? RESOLC_COMPILER_PATH_VERSION : 'latest';
-    config.resolc = { ...defaultResolcConfig, ...userConfig?.resolc };
-    config.resolc.settings = { ...defaultResolcConfig.settings, ...userConfig?.resolc?.settings };
-    config.resolc.settings.optimizer = {
-        ...defaultResolcConfig.settings.optimizer,
-        ...userConfig?.resolc?.settings?.optimizer,
-    };
+    if (config.resolc.compilerSource !== 'binary') {
+        config.resolc = { ...defaultRemixResolcConfig, ...userConfig?.resolc };
+        config.resolc.settings = { ...defaultRemixResolcConfig.settings, ...userConfig?.resolc?.settings };
+        config.resolc.settings.optimizer = {
+            ...defaultRemixResolcConfig.settings.optimizer,
+            ...userConfig?.resolc?.settings?.optimizer,
+        };
+    } else {
+        config.resolc = { ...defaultBinaryResolcConfig, ...userConfig?.resolc };
+        config.resolc.settings = { ...defaultBinaryResolcConfig.settings, ...userConfig?.resolc?.settings };
+        config.resolc.settings.optimizer = {
+            ...defaultBinaryResolcConfig.settings.optimizer,
+            ...userConfig?.resolc?.settings?.optimizer,
+        };
+    }
+
 });
 
 extendEnvironment((hre) => {

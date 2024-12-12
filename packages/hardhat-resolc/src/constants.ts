@@ -11,7 +11,7 @@ export const TASK_UPDATE_SOLIDITY_COMPILERS = 'compile:update-solidity-compilers
 
 export const COMPILER_RESOLC_NEED_EVM_CODEGEN = `Yul codegen is only supported for solc >= 0.8. Flag forceEVMLA will automatically be set to true by default.`;
 
-export const defaultResolcConfig: ResolcConfig = {
+export const defaultRemixResolcConfig: ResolcConfig = {
     version: 'latest',
     compilerSource: 'remix',
     settings: {
@@ -19,5 +19,15 @@ export const defaultResolcConfig: ResolcConfig = {
             enabled: true,
             runs: 200,
         },
+    },
+};
+
+export const defaultBinaryResolcConfig: ResolcConfig = {
+    version: 'latest',
+    compilerSource: 'binary',
+    settings: {
+        optimizer: {
+            enabled: true,
+        }
     },
 };
