@@ -1,4 +1,4 @@
-import { Artifact, CompilerInput } from 'hardhat/types';
+import { Artifact, CompilerInput, SolcConfig } from 'hardhat/types';
 
 export interface ResolcConfig {
     version: string;
@@ -23,7 +23,7 @@ export interface ResolcConfig {
             // Try to recompile with -Oz if the bytecode is too large.
             fallbackOz?: boolean;
             // Optimizer runs. For use with the `remix` compilerSource.
-            runs?: string;
+            runs?: number;
         };
         // Specify the path to the `solc` executable.
         solcPath?: string;
@@ -40,7 +40,7 @@ export interface ResolcConfig {
         // Switch to LLVM IR mode. Only one input LLVM IR file is allowed. Cannot be used with combined and standard JSON modes. Use this mode at your own risk, as LLVM IR input validation is not implemented.
         llvmIR?: boolean;
         // Forcibly switch to EVM legacy assembly pipeline. It is useful for older revisions of `solc` 0.8, where Yul was considered highly experimental and contained more bugs than today
-        forceEvmla?: boolean;
+        forceEVMLA?: boolean;
         // Set metadata hash mode. The only supported value is `none` that disables appending the metadata hash. Is enabled by default.
         metadataHash?: string;
         // Output PolkaVM assembly of the contracts
@@ -117,4 +117,9 @@ export interface SolcInput {
     [contractName: string]: {
         content: string
     }
+}
+
+export interface SolcConfigData {
+    compiler: SolcConfig;
+    file?: string;
 }
