@@ -1,0 +1,20 @@
+{
+  "name": "hardhat-polkavm-node",
+  "packageManager": "yarn@4.4.1",
+  "author": "Alberto Nicolás Penayo <alberto.penayo@parity.io>",
+  "license": "AGPL-3.0",
+  "version": "0.0.1-alpha",
+  "bugs": "https://github.com/bee344/hardhat-revive/issues",
+  "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-polkavm-node#readme",
+  "repository": {
+    "directory": "packages/hardhat-polkavm-node",
+    "type": "git",
+    "url": "https://github.com/bee344/hardhat-revive.git"
+  },
+  "main": "index.js",
+  "devDependencies": {
+    "@types/fs-extra": "^11",
+    "fs-extra": "^11.2.0",
+    "hardhat": "^2.22.17"
+  }
+}
