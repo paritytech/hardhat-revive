@@ -1,7 +1,12 @@
 import { PolkaVMNodePluginError } from "./errors";
 import { NodeConfig } from "./types";
 
-export function extractNodeCommands(nodeConfig: NodeConfig): string[] {
+export function extractNodeCommands(nodeConfig: NodeConfig | undefined): string[] | undefined {
+    
+    if (!nodeConfig) {
+        return undefined;
+    };
+
     const commandArgs: string[] = [];
 
     if (nodeConfig.rpcPort) {
