@@ -12,8 +12,9 @@ export interface NodeConfig {
     // can be a path to a file with the chainspec (such as one exported by
     // the `build-spec` subcommand).
     chain?: string;
-    // Sets a custom logging filter. Log levels are set from least to most verbose.
-    log?: 'error' | 'warn' | 'info' | 'debug' | 'trace';
+    // String array that sets a custom logging filter. Log levels are set from least to most verbose.
+    // Allowed presets are 'error' | 'warn' | 'info' | 'debug' | 'trace'.
+    log?: string[];
     // Enable detailed log output. Includes displaying the log target, log level and thread name.
     // This is automatically enabled when something is logged with any higher level than `info`.
     detailedLogOutput?: boolean;
