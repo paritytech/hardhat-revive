@@ -12,7 +12,7 @@ import {
     TASK_RUN_NODE_POLKAVM_SERVER,
 } from './constants';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
-// import { runScriptWithHardhat } from './core/script-runner';
+import { extractNodeCommands } from './utils';
 
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
     if (!hre.network.polkavm || hre.network.name !== HARDHAT_NETWORK_NAME) {
@@ -35,9 +35,10 @@ task(TASK_NODE, 'Start a PolkaVM Node along with an Eth RPC Adapter.').setAction
 
 subtask(TASK_RUN_NODE_POLKAVM_SERVER, 'Start a PolkaVM Node').setAction(
     async (_args: TaskArguments, hre: HardhatRuntimeEnvironment) => {
-        const nodeBinPath = hre.network.config.nodeConfig?.nodeBinaryPath || `./bin/node/`;
-        
+        const nodeBinPath: string = hre.network.config.nodeConfig?.nodeBinaryPath || `./bin/node/`;
+        const commandArgs: string[] | undefined = extractNodeCommands(hre.network.config.nodeConfig);
 
+        const command = nodeBinPath.concat(commandArgs ? commandArgs.join(' ') : '' );
 
     });
 
