@@ -1,5 +1,11 @@
 import { CompilerInput, SolcConfig } from 'hardhat/types';
 
+type EvmVersions = 'homestead' | 'tangerineWhistle' | 'spuriousDragon' | 'byzantium' | 'constantinople' | 'petersburg' | 'istanbul' | 'berlin' | 'london' | 'paris' | 'shanghai' | 'cancun'; 
+
+type CombinedJSONOpts = 'abi' | 'hashes' | 'metadata' | 'devdoc' | 'userdoc' | 'storage-layout' | 'ast' | 'asm' | 'bin' | 'bin-runtime';
+
+type SuppresWarningsOpts = 'ecrecover' | 'sendtransfer' | 'extcodesize' | 'txorigin' | 'blocktimestamp' | 'blocknumber' | 'blockhash';
+
 export interface ResolcConfig {
     version: string;
     compilerSource?: 'binary' | 'remix',
@@ -7,7 +13,7 @@ export interface ResolcConfig {
         // Set the given path as the root of the source tree instead of the root of the filesystem. Passed to `solc` without changes.
         basePath?: string;
         // Make an additional source directory available to the default import callback. Can be used multiple times. Can only be used if the base path has a non-empty value. Passed to `solc` without changes.
-        includePath?: string;
+        includePaths?: string[];
         // Allow a given path for imports. A list of paths can be supplied by separating them with a comma. Passed to `solc` without changes.
         allowPaths?: string;
         // Create one file per component and contract/file at the specified directory, if given.
@@ -28,9 +34,9 @@ export interface ResolcConfig {
         // Specify the path to the `solc` executable.
         solcPath?: string;
         // The EVM target version to generate IR for. See https://github.com/paritytech/revive/blob/main/crates/common/src/evm_version.rs for reference.
-        evmVersion?: string;
+        evmVersion?: EvmVersions;
         // Output a single JSON document containing the specified information.
-        combinedJson?: 'abi' | 'hashes' | 'metadata' | 'devdoc' | 'userdoc' | 'storage-layout' | 'ast' | 'asm' | 'bin' | 'bin-runtime'
+        combinedJson?: CombinedJSONOpts;
         // Switch to standard JSON input/output mode. Read from stdin, write the result to stdout.
         standardJson?: boolean;
         // Switch to missing deployable libraries detection mode. Only available for standard JSON input/output mode. Contracts are not compiled in this mode, and all compilation artifacts are not included.
@@ -48,7 +54,7 @@ export interface ResolcConfig {
         // Output PolkaVM bytecode of the contracts
         bin?: boolean;
         // Suppress specified warnings.
-        suppressWarnings?: 'ecrecover' | 'sendtransfer' | 'extcodesize' | 'txorigin' | 'blocktimestamp' | 'blocknumber' | 'blockhash';
+        suppressWarnings?: SuppresWarningsOpts[];
         // Dump all IRs to files in the specified directory. Only for testing and debugging.
         debugOutputDir?: string;
         // Set the verify-each option in LLVM. Only for testing and debugging.
@@ -59,6 +65,14 @@ export interface ResolcConfig {
         compilerPath?: string;
         // Specific contracts present in source to be compiled
         contractsToCompile?: string[];
+        // Generate source based debug information in the output code file. This only has an effect with the LLVM-IR code generator and is ignored otherwise.
+        emitDourceDebugInfo?: boolean;
+        // Specify addresses of deployable libraries. Syntax: `<libraryName>=<address> [, or whitespace] ...`.
+        libraries?: string[];
+        // Disable the `solc` optimizer.
+        disableSolcOptimizer?: boolean;
+        // Try to recompile with -Oz if the bytecode is too large.
+        fallbackToOptimizingForSize?: boolean;
     };
 }
 
