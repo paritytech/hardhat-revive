@@ -11,24 +11,13 @@
     "type": "git",
     "url": "https://github.com/bee344/hardhat-revive.git"
   },
-  "scripts": {
-    "test": "NODE_OPTIONS='-r ts-node/register' c8 mocha --recursive \"test/tests/**/*.ts\" --exit"
-  },
   "main": "index.js",
   "devDependencies": {
     "@parity/revive": "^0.0.7",
-    "@types/chai": "^5.0.1",
     "@types/debug": "^4",
-    "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
-    "@types/sinon": "^17.0.3",
-    "c8": "^8.0.1",
-    "chai": "^4.3.4",
     "debug": "^4.4.0",
-    "fast-glob": "^3.3.2",
     "hardhat": "^2.22.17",
-    "mocha": "11.0.1",
-    "sinon": "^19.0.2",
     "solc": "^0.8.28",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
