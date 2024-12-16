@@ -82,7 +82,7 @@ extendEnvironment((hre) => {
 });
 
 task(TASK_COMPILE).setAction(
-    async (compilationArgs: any, hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
+    async (compilationArgs: any, _hre: HardhatRuntimeEnvironment, runSuper: RunSuperFunction<TaskArguments>) => {
         await runSuper(compilationArgs);
     },
 );

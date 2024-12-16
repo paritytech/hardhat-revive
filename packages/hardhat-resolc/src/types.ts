@@ -1,4 +1,4 @@
-import { Artifact, CompilerInput, SolcConfig } from 'hardhat/types';
+import { CompilerInput, SolcConfig } from 'hardhat/types';
 
 export interface ResolcConfig {
     version: string;
