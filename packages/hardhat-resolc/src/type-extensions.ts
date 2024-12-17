@@ -26,6 +26,10 @@ declare module 'hardhat/types/config' {
     interface HttpNetworkConfig {
         polkavm: boolean;
     }
+
+    interface NetworksConfig {
+        polkavm: HttpNetworkConfig
+    }
 }
 
 declare module 'hardhat/types/runtime' {

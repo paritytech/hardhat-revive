@@ -55,7 +55,7 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
-    if (hre.network.config.polkavm) {
+    if (hre.config.networks.polkavm) {
         hre.network.polkavm = hre.network.config.polkavm;
 
         let artifactsPath = hre.config.paths.artifacts;
@@ -88,7 +88,7 @@ task(TASK_COMPILE).setAction(
 );
 
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: string[] }, hre, runSuper) => {
-    if (hre.network.polkavm !== true) {
+    if (!hre.config.networks.polkavm) {
         return await runSuper(args);
     }
 
@@ -108,7 +108,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: stri
 subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) => {
     const { jobs, errors } = await runSuper(args);
 
-    if (hre.network.polkavm !== true || hre.config.resolc.compilerSource !== 'binary') {
+    if (!hre.config.networks.polkavm || hre.config.resolc.compilerSource !== 'binary') {
         return { jobs, errors };
     }
 
@@ -135,7 +135,7 @@ subtask(
         },
         hre,
     ): Promise<any> => {
-        if (hre.network.polkavm !== true) {
+        if (!hre.config.networks.polkavm) {
             return getArtifactFromContractOutput(sourceName, contractName, contractOutput);
         }
         let bytecode: string =
@@ -155,7 +155,7 @@ subtask(
 );
 
 subtask(TASK_COMPILE_SOLIDITY_RUN_SOLC, async (args: { input: any }, hre, runSuper) => {
-    if (hre.network.polkavm !== true) {
+    if (!hre.config.networks.polkavm) {
         return await runSuper(args);
     }
 
@@ -176,7 +176,7 @@ subtask(
         hre,
         runSuper,
     ): Promise<{ output: CompilerOutput; solcBuild: SolcBuild }> => {
-        if (hre.network.polkavm !== true) {
+        if (!hre.config.networks.polkavm) {
             return await runSuper(args);
         }
 
@@ -314,19 +314,19 @@ subtask(TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS).setAction(
 
 subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper) => {
     const compilerInput: ReviveCompilerInput = await runSuper(taskArgs);
-    if (hre.network.polkavm !== true) {
+    if (!hre.config.networks.polkavm) {
         return compilerInput;
     }
 
     if (hre.config.resolc.settings.suppressWarnings && hre.config.resolc.settings.suppressWarnings.length > 0) {
-        compilerInput.suppressedWarnings = [hre.config.resolc.settings.suppressWarnings];
+        compilerInput.suppressedWarnings = hre.config.resolc.settings.suppressWarnings;
     }
 
     return compilerInput;
 });
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
-    if (hre.network.polkavm === true) {
+    if (hre.config.networks.polkavm) {
         return await runSuper(taskArgs);
     }
 
