@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import { ResolcConfig } from '../types';
 import { CompilerInput } from 'hardhat/types';
-import { extractCommands } from 'src/utils';
+import { extractCommands } from '../utils';
 
 export async function compileWithBinary(
     input: CompilerInput,
@@ -14,7 +14,7 @@ export async function compileWithBinary(
     const commands = extractCommands(config);
 
     let processCommand = `${compilerPath} ${commands.join(' ')}`;
-    
+
     const output: string = await new Promise((resolve, reject) => {
         const process = exec(
             processCommand,
