@@ -1,2 +1,2 @@
 # hardhat-revive
-Plugin for using Hardhat with PolkaVM
+Plugins for using Hardhat with PolkaVM.
