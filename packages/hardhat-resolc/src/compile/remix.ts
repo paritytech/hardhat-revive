@@ -8,7 +8,6 @@ import { promisify } from 'util';
 const exec = promisify(execCb);
 
 export function resolveInputs(sources: SolcInput): SolcInput {
-    
     const out = solc.compile((JSON.stringify(sources)), {
         import: (path: string) => {
             return {
