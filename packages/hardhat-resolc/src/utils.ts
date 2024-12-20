@@ -43,10 +43,11 @@ export function updateDefaultCompilerConfig(solcConfigData: SolcConfigData, reso
 
   compiler.settings = { ...settings, optimizer: { ...resolc.settings.optimizer }, evmVersion: resolc.settings.evmVersion };
 
-  resolc.settings.forceEVMLA = resolc.settings.forceEVMLA || false;
+  const forceEVMLA = resolc.settings.forceEVMLA && resolc.compilerSource === 'binary';
+  resolc.settings.forceEVMLA = forceEVMLA;
 
   const [major, minor] = getVersionComponents(compiler.version);
-  if (major === 0 && minor < 8) {
+  if (major === 0 && minor < 7 && resolc.compilerSource === 'binary') {
     console.warn(chalk.blue(COMPILER_RESOLC_NEED_EVM_CODEGEN));
     compiler.settings.forceEVMLA = true;
   }
