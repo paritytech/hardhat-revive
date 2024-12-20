@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "baseUrl": ".",
-        "outDir": "dist",
+        "rootDir": "./src",
+        "outDir": "./dist",
         "sourceMap": true,
         "declaration": true,
         "noFallthroughCasesInSwitch": true,
@@ -9,15 +10,20 @@
         "moduleResolution": "node",
         "module": "commonjs",
         "target": "ES2022",
-        "lib": ["ES2022"],
+        "lib": [
+            "ES2022"
+        ],
         "strict": true,
         "noImplicitAny": true,
         "skipLibCheck": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
         "useUnknownInCatchVariables": true,
-        "types": ["node"],
-        "typeRoots": ["./node_modules/@types", "./src"],
+        "types": [
+            "node"
+        ],
     },
-    "include": ["src/**/*"]
+    "include": [
+        "./src/**/*.ts"
+    ]
 }
