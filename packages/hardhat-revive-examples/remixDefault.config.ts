@@ -1,5 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "@bee344/hardhat-resolc"
+import "hardhat-resolc"
 
 const config: HardhatUserConfig = {
     solidity: "0.8.28",

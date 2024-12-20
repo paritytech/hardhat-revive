@@ -5,20 +5,6 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@bee344/hardhat-resolc@workspace:packages/hardhat-resolc":
-  version: 0.0.0-use.local
-  resolution: "@bee344/hardhat-resolc@workspace:packages/hardhat-resolc"
-  dependencies:
-    "@types/debug": "npm:^4"
-    "@types/node": "npm:^22.10.2"
-    debug: "npm:^4.4.0"
-    hardhat: "npm:^2.22.17"
-    solc: "npm:^0.8.28"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:^5.7.2"
-  languageName: unknown
-  linkType: soft
-
 "@cspotcode/source-map-support@npm:^0.8.0":
   version: 0.8.1
   resolution: "@cspotcode/source-map-support@npm:0.8.1"
@@ -1627,6 +1613,20 @@ __metadata:
   checksum: 10c0/386d011a553e02bc594ac2ca0bd6d9e4c22d7fa8cfbfc448a6d148c59ea881b092db9dbe3547ae4b88e55f1b01f7c4a2ecc53b310c042793e63aa44cf6c257f2
   languageName: node
   linkType: hard
+
+"hardhat-resolc@workspace:packages/hardhat-resolc":
+  version: 0.0.0-use.local
+  resolution: "hardhat-resolc@workspace:packages/hardhat-resolc"
+  dependencies:
+    "@types/debug": "npm:^4"
+    "@types/node": "npm:^22.10.2"
+    debug: "npm:^4.4.0"
+    hardhat: "npm:^2.22.17"
+    solc: "npm:^0.8.28"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
+  languageName: unknown
+  linkType: soft
 
 "hardhat-revive-examples@workspace:packages/hardhat-revive-examples":
   version: 0.0.0-use.local
