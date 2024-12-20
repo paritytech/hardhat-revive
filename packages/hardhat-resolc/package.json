@@ -1,5 +1,5 @@
 {
-  "name": "@bee344/hardhat-resolc",
+  "name": "hardhat-resolc",
   "packageManager": "yarn@4.4.1",
   "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
   "license": "AGPL-3.0",
