@@ -1,6 +1,8 @@
 # hardhat-resolc
 Plugin for compiling Solidity Smart Contracts to PolkaVM.
 
+**NOTE**: `resolc` is compatible with solidity versions higher than `0.8.0`.
+
 This plugin allows for seamless transition between EVM and PolkaVM environments,
 by enabling compilation of Solidity Smart Contracts to PolkaVM compatible hardhat
 artifacts, in order to facilitate deployment or testing.
@@ -14,9 +16,12 @@ time it allows for selecting either `remix` as the compilation backend or the
 ### Requirements
 When using the `resolc` binary, it's required to state the path to the binary and
 fullfiling all other requirements as described by the [installation section](https://github.com/paritytech/revive?tab=readme-ov-file#installation)
-of the `pallet revive` repo.
+of the `pallet revive` repo. If you need to compile to a solidity version different
+from the `solc` you have installed, the corresponding version's binary must be
+present and the path specified in the configuration.
 
-When using the `remix` backend for compilation, there are no further requirements.
+When using the `remix` backend for compilation, the solidity version of the project
+must be >= 0.8.0, since the backend is hardcoded for that compiler version.
 
 ### Configuration
 Please refer to the [ResolcConfig](/packages/hardhat-resolc/src/types.ts#L9) type
