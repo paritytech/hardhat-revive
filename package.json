@@ -11,5 +11,8 @@
     "type": "git",
     "url": "https://github.com/bee344/hardhat-revive.git"
   },
-  "bugs": "https://github.com/bee344/hardhat-revive/issues"
+  "bugs": "https://github.com/bee344/hardhat-revive/issues",
+  "scripts": {
+    "build": "tsc"
+  }
 }

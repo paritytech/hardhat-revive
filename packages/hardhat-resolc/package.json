@@ -1,9 +1,9 @@
 {
-  "name": "hardhat-resolc",
+  "name": "@bee344/hardhat-resolc",
   "packageManager": "yarn@4.4.1",
-  "author": "Alberto Nicolás Penayo <alberto.penayo@parity.io>",
+  "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
   "license": "AGPL-3.0",
-  "version": "0.0.1-alpha",
+  "version": "0.0.1-beta",
   "bugs": "https://github.com/bee344/hardhat-revive/issues",
   "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-resolc#readme",
   "repository": {
@@ -11,9 +11,26 @@
     "type": "git",
     "url": "https://github.com/bee344/hardhat-revive.git"
   },
-  "main": "index.js",
-  "devDependencies": {
-    "@parity/revive": "^0.0.7",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
     "@types/debug": "^4",
     "@types/node": "^22.10.2",
     "debug": "^4.4.0",
