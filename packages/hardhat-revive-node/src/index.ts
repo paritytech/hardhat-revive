@@ -39,19 +39,21 @@ task(TASK_RUN).setAction(async (args, hre, runSuper) => {
         return;
     }
 
-    await runScriptWithHardhat(hre.hardhatArguments, path.resolve(args.script));
+    await runScriptWithHardhat({ 
+        forking: hre.config.networks.hardhat.forking, 
+        forkBlockNumber: hre.config.networks.hardhat.forking?.blockNumber, 
+        nodeCommands: hre.userConfig.networks?.hardhat?.nodeConfig, 
+        adapterCommands: hre.userConfig.networks?.hardhat?.adapterConfig 
+    }, hre.hardhatArguments, path.resolve(args.script));
 });
 
-// Subtask to create the server
 subtask(TASK_NODE_POLKAVM_CREATE_SERVER, 'Creates a JSON-RPC server for PolkaVM node')
     .setAction(
         async (
             _args,
             hre,
         ) => {
-            // Create the server
-            const server: JsonRpcServer = new JsonRpcServer(hre.userConfig.networks?.hardhat?.nodePath, hre.userConfig.networks?.hardhat?.adapterPath);
-
+            const server: JsonRpcServer = new JsonRpcServer(hre.userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath, hre.userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath);
             return server;
         },
     );
@@ -66,52 +68,19 @@ task(TASK_NODE, 'Start a PolkaVM Node')
         await run(TASK_NODE_POLKAVM, args);
     });
 
-// Main task of the plugin. It starts the server and listens for requests.
 task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
-    .addOptionalParam(
-        'fork',
-        'Starts a local network that is a fork of another network (testnet, mainnet, http://XXX:YY)',
-        undefined,
-        types.string,
-    )
-    .addOptionalParam('endpoint', 'WSS endpoint for the server to listen on - default: 8000', undefined, types.string)
-    .addOptionalParam('adapterEndpoint', 'WSS endpoint for the Eth RPC Adapter to listen on - default: 8545', undefined, types.string)
-    .addOptionalParam('port', 'Port to listen on - default: 8000', undefined, types.int)
-    .addOptionalParam('adapterPort', 'Port for the Eth RPC Adapter to listen on - default: 8545', undefined, types.int)
-    .addOptionalParam('dev', 'Endpoint for the Eth RPC Adapter to listen on - default: 8545', undefined, types.boolean)
-    .addOptionalParam('forkBlockNumber', 'Fork at the specified block height', undefined, types.int)
     .setAction(
         async (
-            {
-                fork,
-                endpoint,
-                adapterEndpoint,
-                port,
-                adapterPort,
-                dev,
-                forkBlockNumber,
-            }: {
-                fork: string;
-                endpoint: string;
-                adapterEndpoint: string;
-                port: number;
-                adapterPort: number;
-                dev: boolean;
-                forkBlockNumber: number;
-            },
-            { run },
+            _,
+            { run, config, userConfig },
         ) => {
             const commandArgs = constructCommandArgs({
-                fork,
-                endpoint,
-                adapterEndpoint,
-                port,
-                adapterPort,
-                dev,
-                forkBlockNumber,
+                forking: config.networks.hardhat.forking,
+                forkBlockNumber: config.networks.hardhat.forking?.blockNumber,
+                nodeCommands: userConfig.networks?.hardhat?.nodeConfig,
+                adapterCommands: userConfig.networks?.hardhat?.adapterConfig
             });
 
-            // Create the server
             const server: RpcServer = await run(TASK_NODE_POLKAVM_CREATE_SERVER);
 
             try {
@@ -171,15 +140,20 @@ task(
         const currentNodePort = await getAvailablePort(CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
         const currentAdapterPort = await getAvailablePort(ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
 
-        const commandArgs = constructCommandArgs({ port: currentNodePort, adapterPort: currentAdapterPort });
+        const commandArgs = constructCommandArgs({
+            forking: config.networks.hardhat.forking,
+            forkBlockNumber: config.networks.hardhat.forking?.blockNumber,
+            nodeCommands: userConfig.networks?.hardhat?.nodeConfig,
+            adapterCommands: userConfig.networks?.hardhat?.adapterConfig
+        });
 
-        const server = new JsonRpcServer(userConfig.networks?.hardhat?.nodePath, userConfig.networks?.hardhat?.adapterPath);
+        const server = new JsonRpcServer(userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath, userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath);
 
         try {
             await server.listen(commandArgs.nodeCommands, commandArgs.adapterCommands, false);
 
             await waitForNodeToBeReady(currentNodePort);
-            await waitForNodeToBeReady(currentAdapterPort);
+            await waitForNodeToBeReady(currentAdapterPort, true);
             await configureNetwork(config, network, currentAdapterPort ? currentAdapterPort : currentNodePort);
 
             let testFailures = 0;

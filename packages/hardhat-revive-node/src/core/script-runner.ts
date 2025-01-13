@@ -3,8 +3,10 @@ import { HardhatArguments } from 'hardhat/types';
 import { getEnvVariablesMap } from 'hardhat/internal/core/params/env-variables';
 import path from 'path';
 import { startServer, waitForNodeToBeReady } from '../utils';
+import { CommandArguments } from 'src/types';
 
 export async function runScript(
+    config: CommandArguments,
     scriptPath: string,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
@@ -19,7 +21,7 @@ export async function runScript(
         ...extraNodeArgs,
     ];
 
-    const { commandArgs, server, port } = await startServer();
+    const { commandArgs, server, port } = await startServer(config);
     await server.listen(commandArgs.nodeCommands, commandArgs.adapterCommands, false);
     await waitForNodeToBeReady(port);
 
@@ -45,13 +47,14 @@ export async function runScript(
 }
 
 export async function runScriptWithHardhat(
+    config: CommandArguments,
     hardhatArguments: HardhatArguments,
     scriptPath: string,
     scriptArgs: string[] = [],
     extraNodeArgs: string[] = [],
     extraEnvVars: { [name: string]: string } = {},
 ): Promise<number> {
-    return runScript(scriptPath, scriptArgs, [...extraNodeArgs, '--require', path.join(__dirname, 'register')], {
+    return runScript(config, scriptPath, scriptArgs, [...extraNodeArgs, '--require', path.join(__dirname, 'register')], {
         ...getEnvVariablesMap(hardhatArguments),
         ...extraEnvVars,
     });
@@ -72,8 +75,6 @@ function getTsNodeArgsIfNeeded(scriptPath: string, shouldTypecheck: boolean): st
         return [];
     }
 
-    // if we are running the tests we only want to transpile, or these tests
-    // take forever
     if (isRunningHardhatCoreTests()) {
         return ['--require', 'ts-node/register/transpile-only'];
     }

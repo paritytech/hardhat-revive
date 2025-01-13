@@ -1,13 +1,21 @@
-export interface CommandArguments {
-    fork?: string;
-    forkBlockNumber?: number;
+import { HardhatNetworkForkingUserConfig } from "hardhat/types";
+
+export interface NodeConfig {
     nodeBinaryPath?: string;
-    endpoint?: string;
     port?: number;
+}
+
+export interface AdapterConfig {
     adapterBinaryPath?: string;
     adapterEndpoint?: string;
     adapterPort?: number;
     dev?: boolean;
+}
+export interface CommandArguments {
+    forking?: HardhatNetworkForkingUserConfig;
+    forkBlockNumber?: number;
+    nodeCommands?: NodeConfig;
+    adapterCommands?: AdapterConfig;
 }
 
 export interface RpcServer {

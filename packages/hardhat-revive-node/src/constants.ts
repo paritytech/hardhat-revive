@@ -17,7 +17,6 @@ export const RPC_ENDPOINT_PATH = 'eth_chainId';
 export const POLKAVM_TEST_NODE_NETWORK_NAME = 'KitchensinkNode';
 
 export const BASE_URL = `http://127.0.0.1`;
-export const BASE_WS = `ws://127.0.0.1`;
 export const NETWORK_ACCOUNTS = {
     REMOTE: 'remote',
 };

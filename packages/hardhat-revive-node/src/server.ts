@@ -1,24 +1,28 @@
-import { spawn, ChildProcess, StdioOptions } from 'child_process';
+import { spawn, ChildProcess, StdioOptions, exec as execCb} from 'child_process';
 import chalk from 'chalk';
 
 import { CHOPSTICKS_START_PORT, ETH_RPC_ADAPTER_START_PORT, PROCESS_TERMINATION_SIGNALS } from './constants';
 import { RpcServer } from './types';
 import { PolkaVMNodePluginError } from './errors';
+import { promisify } from 'util';
+
+const exec = promisify(execCb);
 
 export class JsonRpcServer implements RpcServer {
     private serverProcess: ChildProcess | null = null;
     private adapterProcess: ChildProcess | null = null;
+    private serverPort: number | null = null;
 
     // eslint-disable-next-line @typescript-eslint/naming-convention
     constructor(
-        private readonly adapterBinaryPath: string | undefined,
-        private readonly nodeBinaryPath: string | undefined
+        private readonly nodeBinaryPath: string | undefined,
+        private readonly adapterBinaryPath: string | undefined
     ) {}
 
     public listen(chopsticksArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
             const chopsticksCommand = this.nodeBinaryPath ? this.nodeBinaryPath : chopsticksArgs[0];
-            const chopsticksCommandArgs = chopsticksArgs;
+            const chopsticksCommandArgs = chopsticksArgs.slice(1);
 
             const chopsticksPortArg = chopsticksArgs.find((arg) => arg.startsWith('--port='));
             const chopsticksPort = chopsticksPortArg ? parseInt(chopsticksPortArg.split('=')[1], 10) : CHOPSTICKS_START_PORT;
@@ -32,36 +36,53 @@ export class JsonRpcServer implements RpcServer {
             if (!blockProcess) {
                 stdioConfig = ['ignore', 'ignore', 'ignore'];
             }
-            this.serverProcess = spawn(chopsticksCommand, chopsticksCommandArgs, { stdio: stdioConfig });
 
+            this.serverPort = chopsticksPort;
+
+            this.serverProcess = spawn(chopsticksCommand, chopsticksCommandArgs, { stdio: stdioConfig });
+            
             const adapterCommand = this.adapterBinaryPath;
 
             if (!adapterCommand) {
-                throw new PolkaVMNodePluginError('A path for the Eth RPC Adapter must be provided.')
+                throw new PolkaVMNodePluginError('A path for the Eth RPC Adapter must be provided.');
             };
 
             const adapterPortArg = adapterArgs.find((arg) => arg.startsWith('--port='));
             const adapterPort = adapterPortArg ? parseInt(adapterPortArg.split('=')[1], 10) : ETH_RPC_ADAPTER_START_PORT;
 
-            this.adapterProcess = spawn(adapterCommand, adapterArgs, { stdio: stdioConfig })
+            this.adapterProcess = spawn(adapterCommand, adapterArgs, { stdio: stdioConfig });
 
             if (blockProcess) {
                 console.info(chalk.green(`Starting the Eth RPC Adapter at 127.0.0.1:${adapterPort}`));
                 console.info(chalk.green(`Running command: ${adapterCommand} ${adapterArgs.join(' ')}`));
             }
 
+            let terminatedProcesses = 0;
+            const processExitHandler = (process: ChildProcess, name: string) => {
+                console.log('name: ', name)
+                process.on('exit', (code, signal) => {
+                    if (signal) {
+                        console.info(chalk.yellow(`Received ${signal} signal. The ${name} process has exited.`));
+                    } else if (code !== 0) {
+                        console.info(chalk.red(`The ${name} process exited with code: ${code}`));
+                    }
+
+                    terminatedProcesses++;
+
+                    if (terminatedProcesses === 2) {
+                        if (this.serverProcess?.exitCode === 0 && this.adapterProcess?.exitCode === 0) {
+                            console.info(chalk.green('Both processes exited successfully.'));
+                        } else {
+                            console.warn(chalk.yellow('One or both processes did not exit normally.'));
+                        }
+                        resolve();
+                    }
+                });
+            };
+
             this.serverProcess.on('error', (error) => {
                 console.info(chalk.red('Error running the server:', error));
                 reject(new Error(`Error running the server: ${error.message}`));
-            });
-
-            this.serverProcess.on('exit', (code, signal) => {
-                if (signal && PROCESS_TERMINATION_SIGNALS.includes(signal)) {
-                    console.info(chalk.yellow(`Received ${signal} signal. The server process has exited.`));
-                    resolve();
-                } else {
-                    reject(new Error(`The server process exited with code: ${code}`));
-                }
             });
 
             this.adapterProcess.on('error', (error) => {
@@ -69,14 +90,8 @@ export class JsonRpcServer implements RpcServer {
                 reject(new Error(`Error running the Eth RPC Adapter: ${error.message}`));
             });
 
-            this.adapterProcess.on('exit', (code, signal) => {
-                if (signal && PROCESS_TERMINATION_SIGNALS.includes(signal)) {
-                    console.info(chalk.yellow(`Received ${signal} signal. The Eth RPC Adapter process has exited.`));
-                    resolve();
-                } else {
-                    reject(new Error(`The Eth RPC Adapter process exited with code: ${code}`));
-                }
-            });
+            processExitHandler(this.adapterProcess, 'adapter');
+            processExitHandler(this.serverProcess, 'server');
 
             if (!blockProcess) {
                 resolve();
@@ -84,15 +99,42 @@ export class JsonRpcServer implements RpcServer {
         });
     }
 
-    public stop(): Promise<void> {
-        return new Promise((resolve) => {
-            if (this.serverProcess && !this.serverProcess.killed) {
-                this.serverProcess.kill(); // Sends SIGTERM
+    public async killProcessByPort(port: number): Promise<void> {
+        try {
+            console.info(chalk.green(`Attempting to kill process on port ${port}`));
+
+            const { stdout } = await exec(`lsof -t -i :${port}`);
+
+            if (!stdout) {
+                console.warn(chalk.yellow(`No process found running on port ${port}`));
+                return;
             }
 
-            if (this.adapterProcess && !this.adapterProcess.killed) {
-                this.adapterProcess.kill(); // Sends SIGTERM
+            const pid = parseInt(stdout.trim(), 10);
+            if (isNaN(pid)) {
+                throw new Error(`Invalid PID received for port ${port}: ${stdout}`);
             }
+
+            console.info(chalk.green(`Killing process with PID ${pid} running on port ${port}`));
+            await exec(`kill ${pid}`);
+
+            console.info(chalk.green(`Successfully killed process on port ${port}`));
+        } catch (error) {
+            console.error(chalk.red(`Error killing process on port ${port}:`, error));
+        }
+    }
+
+    public stop(): Promise<void> {
+        return new Promise((resolve) => {
+            if (this.adapterProcess && !this.adapterProcess.killed) {
+                this.killProcessByPort(this.serverPort!);
+                this.adapterProcess.kill();
+            }
+
+            if (this.serverProcess && !this.serverProcess.killed) {
+                this.serverProcess.kill();
+            }
+
             resolve();
         });
     }

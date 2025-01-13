@@ -13,53 +13,47 @@ import {
     CHOPSTICKS_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     POLKAVM_TEST_NODE_NETWORK_NAME,
-    BASE_WS,
 } from './constants';
 import { PolkaVMNodePluginError } from './errors';
 import { CommandArguments, SplitCommands } from './types';
 import { JsonRpcServer } from './server';
 
-// Generates command arguments for running the era-test-node binary
 export function constructCommandArgs(args: CommandArguments): SplitCommands {
     const nodeCommands: string[] = [];
     const adapterCommands: string[] | undefined = [];
 
-    if (args.fork) {
-        nodeCommands.push(`npx @acala-network/chopsticks@latest`);
+    if (args.forking) {
+        nodeCommands.push(`npx`);
+        nodeCommands.push(`@acala-network/chopsticks@latest`);
+
+        nodeCommands.push(`--endpoint=${args.forking.url}`);
 
         if (args.forkBlockNumber) {
             nodeCommands.push(`--block=${args.forkBlockNumber}`);
         }
-    } else if (args.nodeBinaryPath){
-        nodeCommands.push(args.nodeBinaryPath);
+    } else if (args.nodeCommands?.nodeBinaryPath) {
+        nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
     } else {
         throw new PolkaVMNodePluginError('Binary path not specified.');
     }
 
-    if (args.endpoint) {
-        nodeCommands.push(`--endpoint=${args.endpoint}`);
+    if (args.nodeCommands?.port) {
+        nodeCommands.push(`--port=${args.nodeCommands.port}`);
+    }
+
+    if (args.adapterCommands?.adapterEndpoint) {
+        adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
     } else {
-        throw new PolkaVMNodePluginError('Endpoint not defined.');
+        adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
+
     }
 
-    if (args.port) {
-        nodeCommands.push(`--port=${args.port}`);
+    if (args.adapterCommands?.adapterPort) {
+        adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
     }
 
-    if (args.adapterBinaryPath) {
-        adapterCommands.push(args.adapterBinaryPath);
-    }
-
-    if (args.adapterEndpoint) {
-        adapterCommands.push(`--node-rpc-url=${args.adapterEndpoint}`);
-    }
-
-    if (args.adapterPort) {
-        adapterCommands.push(`--rpc-port=${args.adapterPort}`);
-    }
-
-    if (args.dev) {
-        adapterCommands.push('-- --dev');
+    if (args.adapterCommands?.dev) {
+        adapterCommands.push('--dev');
     }
 
     return {
@@ -84,43 +78,75 @@ export async function isPortAvailable(port: number): Promise<boolean> {
     return availableIPv4 && availableIPv6;
 }
 
-export async function waitForNodeToBeReady(port: number, maxAttempts: number = 20): Promise<void> {
+export async function waitForNodeToBeReady(port: number, adapter: boolean = false, maxAttempts: number = 20): Promise<void> {
     const rpcEndpoint = `http://127.0.0.1:${port}`;
 
-    const payload = {
-        jsonrpc: '2.0',
-        method: 'eth_chainId',
-        params: [],
-        id: new Date().getTime(),
-    };
+    if (adapter) {
+        const payload = {
+            jsonrpc: '2.0',
+            method: 'eth_chainId',
+            params: [],
+            id: 1,
+        };
 
-    let attempts = 0;
-    let waitTime = 1000; // Initial wait time in milliseconds
-    const backoffFactor = 2;
-    const maxWaitTime = 30000; // Maximum wait time (e.g., 30 seconds)
+        let attempts = 0;
+        let waitTime = 1000;
+        const backoffFactor = 2;
+        const maxWaitTime = 30000;
 
-    while (attempts < maxAttempts) {
-        try {
-            const response = await axios.post(rpcEndpoint, payload);
+        while (attempts < maxAttempts) {
+            try {
+                const response = await axios.post(rpcEndpoint, payload);
 
-            if (response.data && response.data.result) {
-                return; // The node responded with a valid chain ID
+                if (response.data && response.data.result) {
+                    return;
+                }
+            } catch (e: any) {
+                // If it fails, it will just try again
             }
-        } catch (e: any) {
-            // console.error(`Attempt ${attempts + 1} failed with error:`, e.message);
-            // If it fails, it will just try again
+
+            attempts++;
+
+            await new Promise((r) => setTimeout(r, waitTime));
+
+            waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
         }
 
-        attempts++;
+        throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
+    } else {
+        const payload = {
+            jsonrpc: '2.0',
+            method: 'state_call',
+            params: ["AssetConversionApi_quote_price_tokens_for_exact_tokens", "0x0100000204320504f6faef3001000000000000000000000001"],
+            id: 1,
+        };
 
-        // Wait before the next attempt
-        await new Promise((r) => setTimeout(r, waitTime));
+        let attempts = 0;
+        let waitTime = 1000;
+        const backoffFactor = 2;
+        const maxWaitTime = 30000;
 
-        // Update the wait time for the next attempt
-        waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
+        while (attempts < maxAttempts) {
+            try {
+                const response = await axios.post(rpcEndpoint, payload);
+
+                if (response.data && response.data.result) {
+                    return;
+                }
+            } catch (e: any) {
+            }
+
+            attempts++;
+
+            await new Promise((r) => setTimeout(r, waitTime));
+
+            waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
+        }
+
+        throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
+   
     }
 
-    throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
 }
 
 export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
@@ -172,11 +198,12 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
     network.provider = await createProvider(config, network.name);
 }
 
-export async function startServer(nodePath?: string, adapterPath?: string ) {
+export async function startServer(commands: CommandArguments, nodePath?: string, adapterPath?: string) {
 
     const currentNodePort = await getAvailablePort(CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
     const currentAdapterPort = await getAvailablePort(ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
-    const commandArgs = constructCommandArgs({ port: currentNodePort, adapterPort: currentAdapterPort });
+    const updatedCommands = Object.assign({}, commands, { nodeCommands: { port: currentNodePort }, adapterCommands: { adapterPort: currentAdapterPort } })
+    const commandArgs = constructCommandArgs(updatedCommands);
 
     return {
         commandArgs,

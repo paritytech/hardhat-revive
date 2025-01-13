@@ -1,10 +1,11 @@
 import 'hardhat/types/config';
+import { AdapterConfig, NodeConfig } from './types';
 
 declare module 'hardhat/types/config' {
     interface HardhatNetworkUserConfig {
         polkavm?: boolean;
-        nodePath?: string,
-        adapterPath?: string,
+        nodeConfig?: NodeConfig,
+        adapterConfig?: AdapterConfig,
     }
 
     interface HttpNetworkUserConfig {
