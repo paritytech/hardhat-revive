@@ -11,6 +11,7 @@ export interface AdapterConfig {
     adapterPort?: number;
     dev?: boolean;
 }
+
 export interface CommandArguments {
     forking?: HardhatNetworkForkingUserConfig;
     forkBlockNumber?: number;
