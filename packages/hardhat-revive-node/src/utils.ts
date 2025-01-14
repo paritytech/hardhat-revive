@@ -46,7 +46,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
 
         if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.port) {
             adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
-        } else if (cliCommands.adapterPort !== cliCommands.port) {
+        } else if (cliCommands.adapterPort === cliCommands.port) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
@@ -82,7 +82,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
 
         if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
             adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
-        } else if (args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
+        } else if (args.adapterCommands?.adapterPort === args.nodeCommands?.port) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
