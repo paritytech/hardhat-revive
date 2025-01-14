@@ -3,7 +3,7 @@ Plugin for running an in-memory PolkaVM node.
 
 ### Description
 This plugin enables the usage of a local instance of the PolkaVM node for testing,
-as well as the usage of the `hardhat` network's `forkin` option to fork a live
+as well as the usage of the `hardhat` network's `forking` option to fork a live
 chain using `@acala-network/chopsticks` and use the Polkadot-SDK `eth-rpc-adapter`
 to enable local testing.
 
