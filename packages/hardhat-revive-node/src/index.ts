@@ -48,12 +48,19 @@ task(TASK_RUN).setAction(async (args, hre, runSuper) => {
 });
 
 subtask(TASK_NODE_POLKAVM_CREATE_SERVER, 'Creates a JSON-RPC server for PolkaVM node')
+    .addParam('nodePath', 'Path to the node binary file', undefined, types.string)
+    .addParam('adapterPath', 'Path to the Eth Rpc Adapter binary file', undefined, types.string)
     .setAction(
         async (
-            _args,
-            hre,
+            {
+                nodePath,
+                adapterPath
+            } : {
+                nodePath: string,
+                adapterPath: string
+            },
         ) => {
-            const server: JsonRpcServer = new JsonRpcServer(hre.userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath, hre.userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath);
+            const server: JsonRpcServer = new JsonRpcServer(nodePath, adapterPath);
             return server;
         },
     );
@@ -123,7 +130,10 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
                     forkBlockNumber,
                 });
 
-            const server: RpcServer = await run(TASK_NODE_POLKAVM_CREATE_SERVER);
+            const nodePath = nodeBinaryPath ? nodeBinaryPath : userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath;
+            const adapterPath = adapterBinaryPath ? adapterBinaryPath : userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath;
+
+            const server: RpcServer = await run(TASK_NODE_POLKAVM_CREATE_SERVER, { nodePath, adapterPath });
 
             try {
                 await server.listen(commandArgs.nodeCommands, commandArgs.adapterCommands);

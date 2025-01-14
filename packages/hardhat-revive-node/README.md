@@ -20,12 +20,46 @@ Metadata error: The generated code is not compatible with the node
 As of 14/01/2025, that version can be built from the Polkadot-SDK's [`stable2412`
 branch](https://github.com/paritytech/polkadot-sdk/tree/stable2412).
 
-### Configuration
-Pleaser refer to the [CommandArguments](/packages/hardhat-revive-node/src/types.ts#L15)
+### Configuration of standalone node
+We can run the node locally as either a fork of a live chain or using loca binaries.
+
+```bash
+npx hardhat node --fork wss://asset-hub-westend-rpc.dwellir.com 
+\ --build-block-mode Instant
+\ --adapter-binary-path /path/to/adapter 
+\ --dev
+```
+
+When connecting to a live chain to use the `--fork` command or when running a local
+node you need to have the `eth-rpc-adapter` binary present and it's path defined
+in the `--adapter-binary-path`. When running the node standalone, you must either
+define the chain to fork or provide a binary path to the run the local node.
+
+Pleaser refer to the [CliCommands](/packages/hardhat-revive-node/src/types.ts#L3)
 type to see the available configuration options.
 
-Inside of the hardhat configuration file, you must define both the `polkavm` network
-and the `hardhat` options, such as the following:
+| 🔧 Command                          | 📄 Description                                                                                                       |
+|-------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+| --port                              | Port on which the server should listen. Defaults to 8000.                                                            |
+| --node-binary-path                  | Path to the substrate node binary.                                                                                   |
+| --adapter-endpoint                  | Endpoint to which the adapter will connect to. Defaults to ws://localhost:8000.                                      |
+| --adapter-binary-path               | Path to the eth-rpc-adapter binary.                                                                                  |
+| --adapter-port                      | Port on which the adapter will listen to. Defaults to 8545.                                                          |
+| --dev                               | Whether to run the fork in dev mode. Defaults to false.                                                              |
+| --build-block-mode                  | Build block mode for chopsticks.                                                                                     |
+| --fork                              | Endpoint of the chain to fork.                                                                                       |
+| --fork-block-number                 | Block hash or block number from where to fork.                                                                       |
+
+### Configuration for testing
+When used for testing you have two options, either provide the configuration inside
+the `hardhat.config.{ts,js}` file, or run the node in a separate terminal and
+provide the configuration through the cli arguments defined in the previous section,
+to the run the tests against `localhost`, in this manner:
+```bash
+npx hardhat test --network localhost
+```
+
+When using the config fiel, you must define the `hardhat` options, such as the following:
 
 ```ts
 const config: HardhatUserConfig = {
@@ -41,15 +75,15 @@ const config: HardhatUserConfig = {
         dev: true
       }
     },
-    polkavm: {
-      url: `http://127.0.0.1:8545`
-    },
   }
 };
 ```
 
 In this example, since we are forking a live chain, we do not need to specify the
 node binary path.
+
+Pleaser refer to the [CommandArguments](/packages/hardhat-revive-node/src/types.ts#L28)
+type to see the available configuration options.
 
 ### Compatibility
 Regarding `hardhat` compatibility, since it's set as part of the `hardhat`
