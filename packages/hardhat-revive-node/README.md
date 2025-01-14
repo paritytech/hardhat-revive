@@ -24,7 +24,7 @@ branch](https://github.com/paritytech/polkadot-sdk/tree/stable2412).
 We can run the node locally as either a fork of a live chain or using loca binaries.
 
 ```bash
-npx hardhat node --fork wss://asset-hub-westend-rpc.dwellir.com 
+npx hardhat node-polkavm --fork wss://asset-hub-westend-rpc.dwellir.com 
 \ --build-block-mode Instant
 \ --adapter-binary-path /path/to/adapter 
 \ --dev
