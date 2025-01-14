@@ -10,6 +10,7 @@ export interface AdapterConfig {
     adapterEndpoint?: string;
     adapterPort?: number;
     dev?: boolean;
+    buildBlockMode?: 'Instant' | 'Manual' | 'Batch';
 }
 
 export interface CommandArguments {

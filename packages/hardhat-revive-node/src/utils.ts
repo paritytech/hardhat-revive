@@ -52,6 +52,10 @@ export function constructCommandArgs(args: CommandArguments): SplitCommands {
         adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
     }
 
+    if (args.adapterCommands?.buildBlockMode) {
+        nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
+    }
+
     if (args.adapterCommands?.dev) {
         adapterCommands.push('--dev');
     }
@@ -144,7 +148,7 @@ export async function waitForNodeToBeReady(port: number, adapter: boolean = fals
         }
 
         throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
-   
+
     }
 
 }
