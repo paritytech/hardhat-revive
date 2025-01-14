@@ -59,6 +59,18 @@ to then run the tests against `localhost`, in this manner:
 npx hardhat test --network localhost
 ```
 
+When going with this last option, you will encounter this error with tests that
+use certain helpers:
+```bash
+OnlyHardhatNetworkError: This helper can only be used with Hardhat Network. You are connected to 'localhost'.
+```
+
+To avoid this, you can just apply the configuration in the `hardhat.config` file
+and run the tests normally:
+```bash
+npx hardhat test
+```
+
 When using the `config` field, you must define the `hardhat` options, such as the following:
 
 ```ts
