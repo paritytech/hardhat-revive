@@ -39,11 +39,11 @@ task(TASK_RUN).setAction(async (args, hre, runSuper) => {
         return;
     }
 
-    await runScriptWithHardhat({ 
-        forking: hre.config.networks.hardhat.forking, 
-        forkBlockNumber: hre.config.networks.hardhat.forking?.blockNumber, 
-        nodeCommands: hre.userConfig.networks?.hardhat?.nodeConfig, 
-        adapterCommands: hre.userConfig.networks?.hardhat?.adapterConfig 
+    await runScriptWithHardhat({
+        forking: hre.config.networks.hardhat.forking,
+        forkBlockNumber: hre.config.networks.hardhat.forking?.blockNumber,
+        nodeCommands: hre.userConfig.networks?.hardhat?.nodeConfig,
+        adapterCommands: hre.userConfig.networks?.hardhat?.adapterConfig
     }, hre.hardhatArguments, path.resolve(args.script));
 });
 
@@ -58,7 +58,6 @@ subtask(TASK_NODE_POLKAVM_CREATE_SERVER, 'Creates a JSON-RPC server for PolkaVM 
         },
     );
 
-
 task(TASK_NODE, 'Start a PolkaVM Node')
     .setAction(async (args: TaskArguments, { network, run }, runSuper) => {
         if (network.polkavm !== true || network.name !== HARDHAT_NETWORK_NAME) {
@@ -69,17 +68,60 @@ task(TASK_NODE, 'Start a PolkaVM Node')
     });
 
 task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
+    .addOptionalParam('nodeBinaryPath', 'Path to the substrate node binary', undefined, types.string)
+    .addOptionalParam('port', 'Port where the node will listen on - default: 8000', undefined, types.int)
+    .addOptionalParam('adapterBinaryPath', 'Path to the eth-rpc-adapter binary', undefined, types.string)
+    .addOptionalParam('adapterEndpoint', 'Endpoint to which the adapter will connect to - default: ws://localhost:8000', undefined, types.string)
+    .addOptionalParam('adapterPort', 'Port where the adapter will listen on - default: 8545 ', undefined, types.int)
+    .addOptionalParam('dev', 'Whether to run the adapter in dev mode - default: false', undefined, types.boolean)
+    .addOptionalParam('buildBlockMode', 'Build block mode for @acala-network/chopsticks', undefined, types.string)
+    .addOptionalParam('fork', 'Endpoint to fork a live chain using @acala-network/chopsticks', undefined, types.string)
+    .addOptionalParam('forkBlockNumber', 'Block hash or block number from where to fork', undefined, types.string)
     .setAction(
         async (
-            _,
+            {
+                nodeBinaryPath,
+                port,
+                adapterBinaryPath,
+                adapterEndpoint,
+                adapterPort,
+                dev,
+                buildBlockMode,
+                fork,
+                forkBlockNumber
+
+            }:
+                {
+                    nodeBinaryPath: string,
+                    port: number,
+                    adapterBinaryPath: string,
+                    adapterEndpoint: string,
+                    adapterPort: number,
+                    dev: boolean,
+                    buildBlockMode: 'Instant' | 'Manual' | 'Batch',
+                    fork: string,
+                    forkBlockNumber: string
+                },
             { run, config, userConfig },
         ) => {
-            const commandArgs = constructCommandArgs({
-                forking: config.networks.hardhat.forking,
-                forkBlockNumber: config.networks.hardhat.forking?.blockNumber,
-                nodeCommands: userConfig.networks?.hardhat?.nodeConfig,
-                adapterCommands: userConfig.networks?.hardhat?.adapterConfig
-            });
+            const commandArgs = constructCommandArgs(
+                {
+                    forking: config.networks.hardhat.forking,
+                    forkBlockNumber: config.networks.hardhat.forking?.blockNumber,
+                    nodeCommands: userConfig.networks?.hardhat?.nodeConfig,
+                    adapterCommands: userConfig.networks?.hardhat?.adapterConfig
+                },
+                {
+                    nodeBinaryPath,
+                    port,
+                    adapterBinaryPath,
+                    adapterEndpoint,
+                    adapterPort,
+                    dev,
+                    buildBlockMode,
+                    fork,
+                    forkBlockNumber,
+                });
 
             const server: RpcServer = await run(TASK_NODE_POLKAVM_CREATE_SERVER);
 

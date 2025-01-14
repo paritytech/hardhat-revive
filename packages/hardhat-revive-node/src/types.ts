@@ -1,5 +1,17 @@
 import { HardhatNetworkForkingUserConfig } from "hardhat/types";
 
+export interface CliCommands {
+    nodeBinaryPath?: string;
+    port?: number;
+    adapterBinaryPath?: string;
+    adapterEndpoint?: string;
+    adapterPort?: number;
+    dev?: boolean;
+    buildBlockMode?: 'Instant' | 'Manual' | 'Batch';
+    fork?: string;
+    forkBlockNumber?: string;
+}
+
 export interface NodeConfig {
     nodeBinaryPath?: string;
     port?: number;
@@ -15,7 +27,7 @@ export interface AdapterConfig {
 
 export interface CommandArguments {
     forking?: HardhatNetworkForkingUserConfig;
-    forkBlockNumber?: number;
+    forkBlockNumber?: string | number;
     nodeCommands?: NodeConfig;
     adapterCommands?: AdapterConfig;
 }

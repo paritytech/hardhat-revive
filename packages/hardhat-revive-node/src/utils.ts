@@ -15,14 +15,19 @@ import {
     POLKAVM_TEST_NODE_NETWORK_NAME,
 } from './constants';
 import { PolkaVMNodePluginError } from './errors';
-import { CommandArguments, SplitCommands } from './types';
+import { CliCommands, CommandArguments, SplitCommands } from './types';
 import { JsonRpcServer } from './server';
 
-export function constructCommandArgs(args: CommandArguments): SplitCommands {
+export function constructCommandArgs(args: CommandArguments, cliCommands?: CliCommands): SplitCommands {
     const nodeCommands: string[] = [];
     const adapterCommands: string[] | undefined = [];
 
-    if (args.forking) {
+    if (cliCommands?.fork) {
+        nodeCommands.push(`npx`);
+        nodeCommands.push(`@acala-network/chopsticks@latest`);
+
+        nodeCommands.push(`--endpoint=${cliCommands.fork}`);
+    } else if (args.forking) {
         nodeCommands.push(`npx`);
         nodeCommands.push(`@acala-network/chopsticks@latest`);
 
@@ -31,32 +36,43 @@ export function constructCommandArgs(args: CommandArguments): SplitCommands {
         if (args.forkBlockNumber) {
             nodeCommands.push(`--block=${args.forkBlockNumber}`);
         }
+    } else if (cliCommands?.nodeBinaryPath) {
+        nodeCommands.push(cliCommands.nodeBinaryPath);
     } else if (args.nodeCommands?.nodeBinaryPath) {
         nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
     } else {
         throw new PolkaVMNodePluginError('Binary path not specified.');
     }
 
-    if (args.nodeCommands?.port) {
+    if (cliCommands?.port) {
+        nodeCommands.push(`--port=${cliCommands.port}`);
+    } else if (args.nodeCommands?.port) {
         nodeCommands.push(`--port=${args.nodeCommands.port}`);
     }
 
-    if (args.adapterCommands?.adapterEndpoint) {
+    if (cliCommands?.adapterEndpoint) {
+        adapterCommands.push(`--node-rpc-url=${cliCommands.adapterEndpoint}`);
+    } else if (args.adapterCommands?.adapterEndpoint) {
         adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
     } else {
         adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
-
     }
 
-    if (args.adapterCommands?.adapterPort) {
+    if (cliCommands?.adapterPort) {
+        adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
+    } else if (args.adapterCommands?.adapterPort) {
         adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
     }
 
-    if (args.adapterCommands?.buildBlockMode) {
+    if (cliCommands?.buildBlockMode) {
+        nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
+    } else if (args.adapterCommands?.buildBlockMode) {
         nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
     }
 
-    if (args.adapterCommands?.dev) {
+    if (cliCommands?.dev) {
+        adapterCommands.push('--dev');
+    } else if (args.adapterCommands?.dev) {
         adapterCommands.push('--dev');
     }
 
@@ -205,7 +221,7 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
 export async function startServer(commands: CommandArguments, nodePath?: string, adapterPath?: string) {
 
     const currentNodePort = await getAvailablePort(commands.nodeCommands?.port ? commands.nodeCommands.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
-    const currentAdapterPort = await getAvailablePort(commands.adapterCommands?.adapterPort ? commands.adapterCommands.adapterPort :  ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
+    const currentAdapterPort = await getAvailablePort(commands.adapterCommands?.adapterPort ? commands.adapterCommands.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
     const updatedCommands = Object.assign({}, commands, { nodeCommands: { port: currentNodePort }, adapterCommands: { adapterPort: currentAdapterPort } })
     const commandArgs = constructCommandArgs(updatedCommands);
 
