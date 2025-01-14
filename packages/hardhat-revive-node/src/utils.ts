@@ -18,62 +18,76 @@ import { PolkaVMNodePluginError } from './errors';
 import { CliCommands, CommandArguments, SplitCommands } from './types';
 import { JsonRpcServer } from './server';
 
-export function constructCommandArgs(args: CommandArguments, cliCommands?: CliCommands): SplitCommands {
+export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliCommands): SplitCommands {
     const nodeCommands: string[] = [];
     const adapterCommands: string[] | undefined = [];
 
-    if (cliCommands?.fork && !cliCommands?.nodeBinaryPath && args.nodeCommands?.nodeBinaryPath) {
-        nodeCommands.push(`npx`);
-        nodeCommands.push(`@acala-network/chopsticks@latest`);
+    if (cliCommands) {
+        if (cliCommands.fork) {
+            nodeCommands.push(`npx`);
+            nodeCommands.push(`@acala-network/chopsticks@latest`);
 
-        nodeCommands.push(`--endpoint=${cliCommands.fork}`);
-    } else if (args.forking && !cliCommands?.nodeBinaryPath && args.nodeCommands?.nodeBinaryPath) {
-        nodeCommands.push(`npx`);
-        nodeCommands.push(`@acala-network/chopsticks@latest`);
-
-        nodeCommands.push(`--endpoint=${args.forking.url}`);
-
-        if (args.forkBlockNumber) {
-            nodeCommands.push(`--block=${args.forkBlockNumber}`);
+            nodeCommands.push(`--endpoint=${cliCommands.fork}`);
+        } else if (cliCommands.nodeBinaryPath) {
+            nodeCommands.push(cliCommands.nodeBinaryPath);
+        } else {
+            throw new PolkaVMNodePluginError('Binary path not specified.');
         }
-    } else if (cliCommands?.nodeBinaryPath) {
-        nodeCommands.push(cliCommands.nodeBinaryPath);
-    } else if (args.nodeCommands?.nodeBinaryPath) {
-        nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
-    } else {
-        throw new PolkaVMNodePluginError('Binary path not specified.');
-    }
 
-    if (cliCommands?.port) {
-        nodeCommands.push(`--port=${cliCommands.port}`);
-    } else if (args.nodeCommands?.port) {
-        nodeCommands.push(`--port=${args.nodeCommands.port}`);
-    }
+        if (cliCommands.port) {
+            nodeCommands.push(`--port=${cliCommands.port}`);
+        }
 
-    if (cliCommands?.adapterEndpoint) {
-        adapterCommands.push(`--node-rpc-url=${cliCommands.adapterEndpoint}`);
-    } else if (args.adapterCommands?.adapterEndpoint) {
-        adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
-    } else {
-        adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
-    }
+        if (cliCommands.adapterEndpoint) {
+            adapterCommands.push(`--node-rpc-url=${cliCommands.adapterEndpoint}`);
+        } else {
+            adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
+        }
 
-    if (cliCommands?.adapterPort) {
-        adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
-    } else if (args.adapterCommands?.adapterPort) {
-        adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
-    }
+        if (cliCommands.adapterPort) {
+            adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
+        }
 
-    if (cliCommands?.buildBlockMode) {
-        nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
-    } else if (args.adapterCommands?.buildBlockMode) {
-        nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
-    }
+        if (cliCommands?.buildBlockMode) {
+            nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
+        } 
+    
+        if (cliCommands?.dev) {
+            adapterCommands.push('--dev');
+        }
+    } else if (args) {
+        if (args.forking) {
+            nodeCommands.push(`npx`);
+            nodeCommands.push(`@acala-network/chopsticks@latest`);
+    
+            nodeCommands.push(`--endpoint=${args.forking.url}`);   
+        } else if (args.nodeCommands?.nodeBinaryPath) {
+            nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
+        } else {
+            throw new PolkaVMNodePluginError('Binary path not specified.');
+        }
 
-    if (cliCommands?.dev) {
-        adapterCommands.push('--dev');
-    } else if (args.adapterCommands?.dev) {
-        adapterCommands.push('--dev');
+        if (args.nodeCommands?.port) {
+            nodeCommands.push(`--port=${args.nodeCommands.port}`);
+        }
+
+        if (args.adapterCommands?.adapterEndpoint) {
+            adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
+        } else {
+            adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
+        }
+
+        if (args.adapterCommands?.adapterPort) {
+            adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
+        }
+
+        if (args.adapterCommands?.buildBlockMode) {
+            nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
+        }
+
+        if (args.adapterCommands?.dev) {
+            adapterCommands.push('--dev');
+        }
     }
 
     return {
