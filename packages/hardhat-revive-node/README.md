@@ -21,7 +21,7 @@ As of 14/01/2025, that version can be built from the Polkadot-SDK's [`stable2412
 branch](https://github.com/paritytech/polkadot-sdk/tree/stable2412).
 
 ### Configuration of standalone node
-We can run the node locally as either a fork of a live chain or using loca binaries.
+We can run the node locally as either a fork of a live chain or using local binaries.
 
 ```bash
 npx hardhat node --fork wss://asset-hub-westend-rpc.dwellir.com 
