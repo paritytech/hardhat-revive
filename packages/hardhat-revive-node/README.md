@@ -59,7 +59,7 @@ to the run the tests against `localhost`, in this manner:
 npx hardhat test --network localhost
 ```
 
-When using the config fiel, you must define the `hardhat` options, such as the following:
+When using the `config` field, you must define the `hardhat` options, such as the following:
 
 ```ts
 const config: HardhatUserConfig = {
