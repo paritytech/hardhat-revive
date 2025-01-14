@@ -22,12 +22,12 @@ export function constructCommandArgs(args: CommandArguments, cliCommands?: CliCo
     const nodeCommands: string[] = [];
     const adapterCommands: string[] | undefined = [];
 
-    if (cliCommands?.fork) {
+    if (cliCommands?.fork && !cliCommands?.nodeBinaryPath && args.nodeCommands?.nodeBinaryPath) {
         nodeCommands.push(`npx`);
         nodeCommands.push(`@acala-network/chopsticks@latest`);
 
         nodeCommands.push(`--endpoint=${cliCommands.fork}`);
-    } else if (args.forking) {
+    } else if (args.forking && !cliCommands?.nodeBinaryPath && args.nodeCommands?.nodeBinaryPath) {
         nodeCommands.push(`npx`);
         nodeCommands.push(`@acala-network/chopsticks@latest`);
 
