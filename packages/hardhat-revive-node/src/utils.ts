@@ -23,7 +23,6 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
     const adapterCommands: string[] | undefined = [];
 
     if (cliCommands && Object.values(cliCommands).find((v) => v !== undefined)) {
-        // console.log('CLI', Object.values(cliCommands).find((v) => v !== undefined))
         if (cliCommands.fork) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);

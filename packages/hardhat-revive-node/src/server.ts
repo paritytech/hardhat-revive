@@ -46,14 +46,14 @@ export class JsonRpcServer implements RpcServer {
 
     public listen(chopsticksArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
-            const chopsticksCommand = this.nodeBinaryPath ? this.nodeBinaryPath : chopsticksArgs[0];
+            const chopsticksCommand = this.nodeBinaryPath && chopsticksArgs.find((arg) => arg.startsWith('--forking=')) ? this.nodeBinaryPath : chopsticksArgs[0];
             const chopsticksCommandArgs = chopsticksArgs.slice(1);
 
             const chopsticksPortArg = chopsticksArgs.find((arg) => arg.startsWith('--port='));
             const chopsticksPort = chopsticksPortArg ? parseInt(chopsticksPortArg.split('=')[1], 10) : CHOPSTICKS_START_PORT;
 
             if (blockProcess) {
-                console.info(chalk.green(`Starting chopsticks at 127.0.0.1:${chopsticksPort}`));
+                console.info(chalk.green(`Starting server at 127.0.0.1:${chopsticksPort}`));
                 console.info(chalk.green(`Running command: ${chopsticksCommand} ${chopsticksCommandArgs.join(' ')}`));
             }
 
