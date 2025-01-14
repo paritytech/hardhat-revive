@@ -44,14 +44,16 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (cliCommands.adapterPort) {
+        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.port) {
             adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
+        } else if (cliCommands.adapterPort !== cliCommands.port) {
+            throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
         if (cliCommands?.buildBlockMode) {
             nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
-        } 
-    
+        }
+
         if (cliCommands?.dev) {
             adapterCommands.push('--dev');
         }
@@ -60,8 +62,8 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
         if (args.forking) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
-    
-            nodeCommands.push(`--endpoint=${args.forking.url}`);   
+
+            nodeCommands.push(`--endpoint=${args.forking.url}`);
         } else if (args.nodeCommands?.nodeBinaryPath) {
             nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
         } else {
@@ -78,8 +80,10 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (args.adapterCommands?.adapterPort) {
+        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
             adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
+        } else if (args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
+            throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
         if (args.adapterCommands?.buildBlockMode) {
