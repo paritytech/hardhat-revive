@@ -3,7 +3,7 @@ Plugin for running an in-memory PolkaVM node.
 
 ### Description
 This plugin enables the usage of a local instance of the PolkaVM node for testing,
-as well as the usage of the `hardhat` network's `forkin` option to fork a live
+as well as the usage of the `hardhat` network's `forking` option to fork a live
 chain using `@acala-network/chopsticks` and use the Polkadot-SDK `eth-rpc-adapter`
 to enable local testing.
 
@@ -21,7 +21,7 @@ As of 14/01/2025, that version can be built from the Polkadot-SDK's [`stable2412
 branch](https://github.com/paritytech/polkadot-sdk/tree/stable2412).
 
 ### Configuration of standalone node
-We can run the node locally as either a fork of a live chain or using loca binaries.
+We can run the node locally as either a fork of a live chain or using local binaries.
 
 ```bash
 npx hardhat node-polkavm --fork wss://asset-hub-westend-rpc.dwellir.com 
@@ -54,12 +54,12 @@ type to see the available configuration options.
 When used for testing you have two options, either provide the configuration inside
 the `hardhat.config.{ts,js}` file, or run the node in a separate terminal and
 provide the configuration through the cli arguments defined in the previous section,
-to the run the tests against `localhost`, in this manner:
+to then run the tests against `localhost`, in this manner:
 ```bash
 npx hardhat test --network localhost
 ```
 
-When using the config fiel, you must define the `hardhat` options, such as the following:
+When using the `config` field, you must define the `hardhat` options, such as the following:
 
 ```ts
 const config: HardhatUserConfig = {
