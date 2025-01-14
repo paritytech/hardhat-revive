@@ -54,7 +54,7 @@ type to see the available configuration options.
 When used for testing you have two options, either provide the configuration inside
 the `hardhat.config.{ts,js}` file, or run the node in a separate terminal and
 provide the configuration through the cli arguments defined in the previous section,
-to the run the tests against `localhost`, in this manner:
+to then run the tests against `localhost`, in this manner:
 ```bash
 npx hardhat test --network localhost
 ```
