@@ -19,6 +19,31 @@ export class JsonRpcServer implements RpcServer {
         private readonly adapterBinaryPath: string | undefined
     ) {}
 
+    public async killProcessByPort(port: number): Promise<void> {
+        try {
+            console.info(chalk.green(`Attempting to kill process on port ${port}`));
+
+            const { stdout } = await exec(`fuser -k ${port}/tcp`);
+
+            if (!stdout) {
+                console.warn(chalk.yellow(`No process found running on port ${port}`));
+                return;
+            }
+
+            const pid = parseInt(stdout.trim(), 10);
+            if (isNaN(pid)) {
+                throw new Error(`Invalid PID received for port ${port}: ${stdout}`);
+            }
+
+            console.info(chalk.green(`Killing process with PID ${pid} running on port ${port}`));
+            await exec(`kill ${pid}`);
+
+            console.info(chalk.green(`Successfully killed process on port ${port}`));
+        } catch (error) {
+            console.error(chalk.red(`Error killing process on port ${port}:`, error));
+        }
+    }
+
     public listen(chopsticksArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
             const chopsticksCommand = this.nodeBinaryPath ? this.nodeBinaryPath : chopsticksArgs[0];
@@ -58,10 +83,10 @@ export class JsonRpcServer implements RpcServer {
             }
 
             let terminatedProcesses = 0;
-            const processExitHandler = (process: ChildProcess, name: string) => {
-                console.log('name: ', name)
+            const processExitHandler = (process: ChildProcess, name: string, port?: number) => {
                 process.on('exit', (code, signal) => {
                     if (signal) {
+                        if (name === 'server' ) this.killProcessByPort(port!);
                         console.info(chalk.yellow(`Received ${signal} signal. The ${name} process has exited.`));
                     } else if (code !== 0) {
                         console.info(chalk.red(`The ${name} process exited with code: ${code}`));
@@ -91,7 +116,7 @@ export class JsonRpcServer implements RpcServer {
             });
 
             processExitHandler(this.adapterProcess, 'adapter');
-            processExitHandler(this.serverProcess, 'server');
+            processExitHandler(this.serverProcess, 'server', this.serverPort);
 
             if (!blockProcess) {
                 resolve();
@@ -99,31 +124,7 @@ export class JsonRpcServer implements RpcServer {
         });
     }
 
-    public async killProcessByPort(port: number): Promise<void> {
-        try {
-            console.info(chalk.green(`Attempting to kill process on port ${port}`));
-
-            const { stdout } = await exec(`lsof -t -i :${port}`);
-
-            if (!stdout) {
-                console.warn(chalk.yellow(`No process found running on port ${port}`));
-                return;
-            }
-
-            const pid = parseInt(stdout.trim(), 10);
-            if (isNaN(pid)) {
-                throw new Error(`Invalid PID received for port ${port}: ${stdout}`);
-            }
-
-            console.info(chalk.green(`Killing process with PID ${pid} running on port ${port}`));
-            await exec(`kill ${pid}`);
-
-            console.info(chalk.green(`Successfully killed process on port ${port}`));
-        } catch (error) {
-            console.error(chalk.red(`Error killing process on port ${port}:`, error));
-        }
-    }
-
+    
     public stop(): Promise<void> {
         return new Promise((resolve) => {
             if (this.adapterProcess && !this.adapterProcess.killed) {
