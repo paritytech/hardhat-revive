@@ -48,8 +48,8 @@ task(TASK_RUN).setAction(async (args, hre, runSuper) => {
 });
 
 subtask(TASK_NODE_POLKAVM_CREATE_SERVER, 'Creates a JSON-RPC server for PolkaVM node')
-    .addParam('nodePath', 'Path to the node binary file', undefined, types.string)
-    .addParam('adapterPath', 'Path to the Eth Rpc Adapter binary file', undefined, types.string)
+    .addOptionalParam('nodePath', 'Path to the node binary file', undefined, types.string)
+    .addOptionalParam('adapterPath', 'Path to the Eth Rpc Adapter binary file', undefined, types.string)
     .setAction(
         async (
             {

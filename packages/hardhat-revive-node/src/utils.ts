@@ -22,7 +22,8 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
     const nodeCommands: string[] = [];
     const adapterCommands: string[] | undefined = [];
 
-    if (cliCommands) {
+    if (cliCommands && Object.values(cliCommands).find((v) => v !== undefined)) {
+        // console.log('CLI', Object.values(cliCommands).find((v) => v !== undefined))
         if (cliCommands.fork) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
@@ -55,7 +56,8 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
         if (cliCommands?.dev) {
             adapterCommands.push('--dev');
         }
-    } else if (args) {
+    } else if (args && Object.values(args).find((v) => v !== undefined)) {
+        console.log(args)
         if (args.forking) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
