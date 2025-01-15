@@ -695,6 +695,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/fs-extra@npm:^11.0.4":
+  version: 11.0.4
+  resolution: "@types/fs-extra@npm:11.0.4"
+  dependencies:
+    "@types/jsonfile": "npm:*"
+    "@types/node": "npm:*"
+  checksum: 10c0/9e34f9b24ea464f3c0b18c3f8a82aefc36dc524cc720fc2b886e5465abc66486ff4e439ea3fb2c0acebf91f6d3f74e514f9983b1f02d4243706bdbb7511796ad
+  languageName: node
+  linkType: hard
+
+"@types/jsonfile@npm:*":
+  version: 6.1.4
+  resolution: "@types/jsonfile@npm:6.1.4"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/b12d068b021e4078f6ac4441353965769be87acf15326173e2aea9f3bf8ead41bd0ad29421df5bbeb0123ec3fc02eb0a734481d52903704a1454a1845896b9eb
+  languageName: node
+  linkType: hard
+
 "@types/lru-cache@npm:^5.1.0":
   version: 5.1.1
   resolution: "@types/lru-cache@npm:5.1.1"
@@ -1631,6 +1650,21 @@ __metadata:
 "hardhat-revive-examples@workspace:packages/hardhat-revive-examples":
   version: 0.0.0-use.local
   resolution: "hardhat-revive-examples@workspace:packages/hardhat-revive-examples"
+  languageName: unknown
+  linkType: soft
+
+"hardhat-revive-node@workspace:packages/hardhat-revive-node":
+  version: 0.0.0-use.local
+  resolution: "hardhat-revive-node@workspace:packages/hardhat-revive-node"
+  dependencies:
+    "@types/debug": "npm:^4"
+    "@types/fs-extra": "npm:^11.0.4"
+    "@types/node": "npm:^22.10.2"
+    debug: "npm:^4.4.0"
+    hardhat: "npm:^2.22.17"
+    solc: "npm:^0.8.28"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
