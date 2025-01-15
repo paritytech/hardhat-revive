@@ -36,16 +36,16 @@ optimizer under the option with the same name.
 When using the `resolc` binary, the same configuration options as when using the
 binary on its own are available.
 
-Inside of the hardhat configuration file, you must define both the `polkavm` network
-and the `resolc` options, such as the following:
+Inside of the hardhat configuration file, you must define both that the VM is `polkavm`
+inside the `hardhat` network and the `resolc` options, such as the following:
 
 ```ts
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
   networks: {
-    polkavm: {
-      url: `http://127.0.0.1:8545`
-    },
+    hardhat: {
+      polkavm: true
+    }
   },
   resolc: {
     compilerSource: 'remix',
