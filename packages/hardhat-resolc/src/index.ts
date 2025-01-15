@@ -55,8 +55,8 @@ extendConfig((config, userConfig) => {
 });
 
 extendEnvironment((hre) => {
-    if (hre.network.config.polkavm) {
-        hre.network.polkavm = hre.network.config.polkavm;
+    if (hre.userConfig.networks?.hardhat?.polkavm) {
+        hre.network.polkavm = hre.userConfig.networks?.hardhat?.polkavm;
 
         let artifactsPath = hre.config.paths.artifacts;
         if (!artifactsPath.endsWith('-pvm')) {
@@ -88,7 +88,7 @@ task(TASK_COMPILE).setAction(
 );
 
 subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: string[] }, hre, runSuper) => {
-    if (!hre.network.config.polkavm) {
+    if (!hre.userConfig.networks?.hardhat?.polkavm) {
         return await runSuper(args);
     }
 
@@ -108,7 +108,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: stri
 subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) => {
     const { jobs, errors } = await runSuper(args);
 
-    if (!hre.network.config.polkavm || hre.config.resolc.compilerSource !== 'binary') {
+    if (!hre.userConfig.networks?.hardhat?.polkavm || hre.config.resolc.compilerSource !== 'binary') {
         return { jobs, errors };
     }
 
@@ -135,7 +135,7 @@ subtask(
         },
         hre,
     ): Promise<any> => {
-        if (!hre.network.config.polkavm) {
+        if (!hre.userConfig.networks?.hardhat?.polkavm) {
             return getArtifactFromContractOutput(sourceName, contractName, contractOutput);
         }
         let bytecode: string =
@@ -314,7 +314,7 @@ subtask(TASK_COMPILE_SOLIDITY_EMIT_ARTIFACTS).setAction(
 
 subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper) => {
     const compilerInput: ReviveCompilerInput = await runSuper(taskArgs);
-    if (!hre.network.config.polkavm) {
+    if (!hre.userConfig.networks?.hardhat?.polkavm) {
         return compilerInput;
     }
 
@@ -326,7 +326,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper
 });
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
-    if (hre.network.config.polkavm) {
+    if (hre.userConfig.networks?.hardhat?.polkavm) {
         return await runSuper(taskArgs);
     }
 
