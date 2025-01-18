@@ -13,7 +13,7 @@ import { HARDHAT_NETWORK_NAME } from 'hardhat/plugins';
 import { TaskArguments } from 'hardhat/types';
 import path from 'path';
 import {
-    CHOPSTICKS_START_PORT,
+    NODE_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     MAX_PORT_ATTEMPTS,
     TASK_NODE_POLKAVM,
@@ -188,7 +188,7 @@ task(
 
         const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
 
-        const currentNodePort = await getAvailablePort(userConfig.networks?.hardhat?.nodeConfig?.port ? userConfig.networks.hardhat.nodeConfig.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
+        const currentNodePort = await getAvailablePort(userConfig.networks?.hardhat?.nodeConfig?.rpcPort ? userConfig.networks.hardhat.nodeConfig.rpcPort : NODE_START_PORT, MAX_PORT_ATTEMPTS);
         const currentAdapterPort = await getAvailablePort(userConfig.networks?.hardhat?.adapterConfig?.adapterPort ? userConfig.networks.hardhat.adapterConfig.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
 
         const nCommands: NodeConfig = Object.assign({}, userConfig.networks?.hardhat?.nodeConfig, { port: currentNodePort })

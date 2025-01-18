@@ -1,7 +1,7 @@
 import { spawn, ChildProcess, StdioOptions, exec } from 'child_process';
 import chalk from 'chalk';
 
-import { CHOPSTICKS_START_PORT, ETH_RPC_ADAPTER_START_PORT } from './constants';
+import { NODE_START_PORT, ETH_RPC_ADAPTER_START_PORT } from './constants';
 import { RpcServer } from './types';
 import { PolkaVMNodePluginError } from './errors';
 
@@ -16,17 +16,17 @@ export class JsonRpcServer implements RpcServer {
         private readonly adapterBinaryPath: string | undefined
     ) {}
 
-    public listen(chopsticksArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
+    public listen(nodeArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
-            const chopsticksCommand = this.nodeBinaryPath && chopsticksArgs.find((arg) => arg.startsWith('--forking=')) ? this.nodeBinaryPath : chopsticksArgs[0];
-            const chopsticksCommandArgs = chopsticksArgs.slice(1);
+            const nodeCommand = this.nodeBinaryPath && nodeArgs.find((arg) => arg.startsWith('--forking=')) ? this.nodeBinaryPath : nodeArgs[0];
+            const nodeCommandArgs = nodeArgs.slice(1);
 
-            const chopsticksPortArg = chopsticksArgs.find((arg) => arg.startsWith('--port='));
-            const chopsticksPort = chopsticksPortArg ? parseInt(chopsticksPortArg.split('=')[1], 10) : CHOPSTICKS_START_PORT;
+            const nodePortArg = nodeArgs.find((arg) => arg.startsWith('--rpc-port='));
+            const nodePort = nodePortArg ? parseInt(nodePortArg.split('=')[1], 10) : NODE_START_PORT;
 
             if (blockProcess) {
-                console.info(chalk.green(`Starting server at 127.0.0.1:${chopsticksPort}`));
-                console.info(chalk.green(`Running command: ${chopsticksCommand} ${chopsticksCommandArgs.join(' ')}`));
+                console.info(chalk.green(`Starting server at 127.0.0.1:${nodePortArg}`));
+                console.info(chalk.green(`Running command: ${nodeCommand} ${nodeCommandArgs.join(' ')}`));
             }
 
             let stdioConfig: StdioOptions = 'inherit';
@@ -34,9 +34,9 @@ export class JsonRpcServer implements RpcServer {
                 stdioConfig = ['ignore', 'ignore', 'ignore'];
             }
 
-            this.serverPort = chopsticksPort;
+            this.serverPort = nodePort;
 
-            this.serverProcess = spawn(chopsticksCommand, chopsticksCommandArgs, { stdio: stdioConfig });
+            this.serverProcess = spawn(nodeCommand, nodeCommandArgs, { stdio: stdioConfig });
             
             const adapterCommand = this.adapterBinaryPath;
 

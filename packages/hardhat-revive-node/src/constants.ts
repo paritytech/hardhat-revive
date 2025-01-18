@@ -7,7 +7,7 @@ export const TASK_RUN_POLKAVM_NODE_IN_SEPARATE_PROCESS = 'node-polkavm:run-in-se
 
 export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGKILL'];
 
-export const CHOPSTICKS_START_PORT = 8000;
+export const NODE_START_PORT = 8000;
 export const ETH_RPC_ADAPTER_START_PORT = 8545;
 export const MAX_PORT_ATTEMPTS = 10;
 export const PORT_CHECK_DELAY = 500;

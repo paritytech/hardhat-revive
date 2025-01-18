@@ -10,7 +10,7 @@ import {
     NETWORK_ETH,
     NETWORK_GAS,
     NETWORK_GAS_PRICE,
-    CHOPSTICKS_START_PORT,
+    NODE_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     POLKAVM_TEST_NODE_NETWORK_NAME,
     RPC_ENDPOINT_PATH,
@@ -214,7 +214,7 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
 
 export async function startServer(commands: CommandArguments, nodePath?: string, adapterPath?: string) {
 
-    const currentNodePort = await getAvailablePort(commands.nodeCommands?.port ? commands.nodeCommands.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
+    const currentNodePort = await getAvailablePort(commands.nodeCommands?.rpcPort ? commands.nodeCommands.rpcPort : NODE_START_PORT, MAX_PORT_ATTEMPTS);
     const currentAdapterPort = await getAvailablePort(commands.adapterCommands?.adapterPort ? commands.adapterCommands.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
     const updatedCommands = Object.assign({}, commands, { nodeCommands: { port: currentNodePort }, adapterCommands: { adapterPort: currentAdapterPort } })
     const commandArgs = constructCommandArgs(updatedCommands);
