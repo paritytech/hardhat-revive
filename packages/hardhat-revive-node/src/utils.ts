@@ -13,6 +13,7 @@ import {
     CHOPSTICKS_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     POLKAVM_TEST_NODE_NETWORK_NAME,
+    RPC_ENDPOINT_PATH,
 } from './constants';
 import { PolkaVMNodePluginError } from './errors';
 import { CliCommands, CommandArguments, SplitCommands } from './types';
@@ -50,15 +51,15 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
-        if (cliCommands?.buildBlockMode) {
+        if (cliCommands.buildBlockMode && cliCommands.fork) {
             nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
         }
 
-        if (cliCommands?.dev) {
+        if (cliCommands.dev) {
             adapterCommands.push('--dev');
+            if (cliCommands.nodeBinaryPath) { nodeCommands.push('--dev') }
         }
     } else if (args && Object.values(args).find((v) => v !== undefined)) {
-        console.log(args)
         if (args.forking) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
@@ -71,7 +72,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
         }
 
         if (args.nodeCommands?.port) {
-            nodeCommands.push(`--port=${args.nodeCommands.port}`);
+            nodeCommands.push(`--rpc-port=${args.nodeCommands.port}`);
         }
 
         if (args.adapterCommands?.adapterEndpoint) {
@@ -88,6 +89,10 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
 
         if (args.adapterCommands?.buildBlockMode) {
             nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
+        }
+
+        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev) {
+            nodeCommands.push(`--dev`)
         }
 
         if (args.adapterCommands?.dev) {
