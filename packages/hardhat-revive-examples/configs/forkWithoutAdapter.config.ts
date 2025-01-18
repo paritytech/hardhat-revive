@@ -22,10 +22,7 @@ const config: HardhatUserConfig = {
         nodeBinaryPath: 'path/to/substrate/node',
         port: 8545
       }
-    },
-    polkavm: {
-      url: `http://127.0.0.1:8545`
-    },
+    }
   },
   resolc: {
     compilerSource: 'remix',
