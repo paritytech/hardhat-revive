@@ -137,30 +137,30 @@ export async function waitForNodeToBeReady(port: number, adapter: boolean = fals
 
     const payload = setPayload(adapter);
 
-        let attempts = 0;
-        let waitTime = 1000;
-        const backoffFactor = 2;
-        const maxWaitTime = 30000;
+    let attempts = 0;
+    let waitTime = 1000;
+    const backoffFactor = 2;
+    const maxWaitTime = 30000;
 
-        while (attempts < maxAttempts) {
-            try {
-                const response = await axios.post(rpcEndpoint, payload);
+    while (attempts < maxAttempts) {
+        try {
+            const response = await axios.post(rpcEndpoint, payload);
 
             if (response.status == 200) {
-                    return;
-                }
-            } catch (e: any) {
-                // If it fails, it will just try again
+                return;
             }
-
-            attempts++;
-
-            await new Promise((r) => setTimeout(r, waitTime));
-
-            waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
+        } catch (e: any) {
+            // If it fails, it will just try again
         }
 
-        throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
+        attempts++;
+
+        await new Promise((r) => setTimeout(r, waitTime));
+
+        waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
+    }
+
+    throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
 }
 
 export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
