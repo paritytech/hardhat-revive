@@ -13,7 +13,7 @@ export const MAX_PORT_ATTEMPTS = 10;
 export const PORT_CHECK_DELAY = 500;
 export const RPC_ENDPOINT_PATH = 'eth_chainId';
 
-export const POLKAVM_TEST_NODE_NETWORK_NAME = 'KitchensinkNode';
+export const POLKAVM_TEST_NODE_NETWORK_NAME = 'hardhat';
 
 export const BASE_URL = `http://127.0.0.1`;
 export const NETWORK_ACCOUNTS = {
