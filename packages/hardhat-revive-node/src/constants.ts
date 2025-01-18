@@ -3,7 +3,6 @@ export const PLUGIN_NAME = 'hardhat-revive-node';
 export const TASK_NODE_POLKAVM = 'node-polkavm';
 export const TASK_NODE_POLKAVM_CREATE_SERVER = 'node-polkavm:create-server';
 export const TASK_NODE_POLKAVM_CREATE_ETH_ADAPTER = 'node-polkavm:create-eth-adapter';
-export const TASK_NODE_POLKAVM_DOWNLOAD_BINARY = 'node-polkavm:download-binary';
 export const TASK_RUN_POLKAVM_NODE_IN_SEPARATE_PROCESS = 'node-polkavm:run-in-separate-process';
 
 export const PROCESS_TERMINATION_SIGNALS = ['SIGINT', 'SIGTERM', 'SIGKILL'];
