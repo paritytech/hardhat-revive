@@ -194,7 +194,7 @@ export function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
-        chainId: 420420421,
+        chainId: 420420420,
     };
 }
 
