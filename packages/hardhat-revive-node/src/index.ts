@@ -31,7 +31,7 @@ import {
 import { PolkaVMNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
-import { RpcServer } from './types';
+import { AdapterConfig, NodeConfig, RpcServer } from './types';
 
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
     if (!hre.network.polkavm || hre.network.name !== HARDHAT_NETWORK_NAME) {
@@ -55,7 +55,7 @@ subtask(TASK_NODE_POLKAVM_CREATE_SERVER, 'Creates a JSON-RPC server for PolkaVM 
             {
                 nodePath,
                 adapterPath
-            } : {
+            }: {
                 nodePath: string,
                 adapterPath: string
             },
@@ -188,15 +188,16 @@ task(
 
         const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
 
+        const currentNodePort = await getAvailablePort(userConfig.networks?.hardhat?.nodeConfig?.port ? userConfig.networks.hardhat.nodeConfig.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
+        const currentAdapterPort = await getAvailablePort(userConfig.networks?.hardhat?.adapterConfig?.adapterPort ? userConfig.networks.hardhat.adapterConfig.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
 
-        const currentNodePort = await getAvailablePort(CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
-        const currentAdapterPort = await getAvailablePort(ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
-
+        const nCommands: NodeConfig = Object.assign({}, userConfig.networks?.hardhat?.nodeConfig, { port: currentNodePort })
+        const aCommands: AdapterConfig = Object.assign({}, userConfig.networks?.hardhat?.adapterConfig, { adapterPort: currentAdapterPort })
         const commandArgs = constructCommandArgs({
             forking: config.networks.hardhat.forking,
             forkBlockNumber: config.networks.hardhat.forking?.blockNumber,
-            nodeCommands: userConfig.networks?.hardhat?.nodeConfig,
-            adapterCommands: userConfig.networks?.hardhat?.adapterConfig
+            nodeCommands: nCommands,
+            adapterCommands: aCommands
         });
 
         const server = new JsonRpcServer(userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath, userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath);
