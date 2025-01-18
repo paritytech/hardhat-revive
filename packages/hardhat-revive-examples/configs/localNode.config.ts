@@ -9,7 +9,7 @@ const config: HardhatUserConfig = {
       polkavm: true,
       nodeConfig: {
         nodeBinaryPath: 'path/to/substrate-node/binary',
-        port: 8000,
+        rpcPort: 8000,
         dev: true,
       },
       adapterConfig: {

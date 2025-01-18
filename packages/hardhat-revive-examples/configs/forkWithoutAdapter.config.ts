@@ -20,7 +20,7 @@ const config: HardhatUserConfig = {
       },
       nodeConfig: {
         nodeBinaryPath: 'path/to/substrate/node',
-        port: 8545
+        rpcPort: 8545
       }
     }
   },
