@@ -14,7 +14,7 @@ export interface CliCommands {
 
 export interface NodeConfig {
     nodeBinaryPath?: string;
-    port?: number;
+    rpcPort?: number;
     dev?: boolean;
 }
 

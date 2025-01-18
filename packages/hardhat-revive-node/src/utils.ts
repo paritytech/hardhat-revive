@@ -71,8 +71,8 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             throw new PolkaVMNodePluginError('Binary path not specified.');
         }
 
-        if (args.nodeCommands?.port) {
-            nodeCommands.push(`--rpc-port=${args.nodeCommands.port}`);
+        if (args.nodeCommands?.rpcPort) {
+            nodeCommands.push(`--rpc-port=${args.nodeCommands.rpcPort}`);
         }
 
         if (args.adapterCommands?.adapterEndpoint) {
@@ -81,9 +81,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
+        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.rpcPort) {
             adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
-        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.port) {
+        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
