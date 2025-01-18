@@ -1,7 +1,7 @@
 import { spawn, ChildProcess, StdioOptions, exec } from 'child_process';
 import chalk from 'chalk';
 
-import { CHOPSTICKS_START_PORT, ETH_RPC_ADAPTER_START_PORT, PROCESS_TERMINATION_SIGNALS } from './constants';
+import { CHOPSTICKS_START_PORT, ETH_RPC_ADAPTER_START_PORT } from './constants';
 import { RpcServer } from './types';
 import { PolkaVMNodePluginError } from './errors';
 
