@@ -1662,7 +1662,6 @@ __metadata:
     "@types/node": "npm:^22.10.2"
     debug: "npm:^4.4.0"
     hardhat: "npm:^2.22.17"
-    solc: "npm:^0.8.28"
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.7.2"
   languageName: unknown
