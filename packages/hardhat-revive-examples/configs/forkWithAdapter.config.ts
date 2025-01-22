@@ -19,9 +19,6 @@ const config: HardhatUserConfig = {
         dev: true
       }
     },
-    polkavm: {
-      url: `http://127.0.0.1:8545`
-    },
   },
   resolc: {
     compilerSource: 'remix',
