@@ -76,7 +76,7 @@ task(TASK_NODE, 'Start a PolkaVM Node')
 
 task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
     .addOptionalParam('nodeBinaryPath', 'Path to the substrate node binary', undefined, types.string)
-    .addOptionalParam('port', 'Port where the node will listen on - default: 8000', undefined, types.int)
+    .addOptionalParam('rpcPort', 'Port where the node will listen on - default: 8000', undefined, types.int)
     .addOptionalParam('adapterBinaryPath', 'Path to the eth-rpc-adapter binary', undefined, types.string)
     .addOptionalParam('adapterEndpoint', 'Endpoint to which the adapter will connect to - default: ws://localhost:8000', undefined, types.string)
     .addOptionalParam('adapterPort', 'Port where the adapter will listen on - default: 8545 ', undefined, types.int)
@@ -88,7 +88,7 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
         async (
             {
                 nodeBinaryPath,
-                port,
+                rpcPort,
                 adapterBinaryPath,
                 adapterEndpoint,
                 adapterPort,
@@ -100,7 +100,7 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
             }:
                 {
                     nodeBinaryPath: string,
-                    port: number,
+                    rpcPort: number,
                     adapterBinaryPath: string,
                     adapterEndpoint: string,
                     adapterPort: number,
@@ -120,7 +120,7 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
                 },
                 {
                     nodeBinaryPath,
-                    port,
+                    rpcPort,
                     adapterBinaryPath,
                     adapterEndpoint,
                     adapterPort,
@@ -129,6 +129,7 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
                     fork,
                     forkBlockNumber,
                 });
+
 
             const nodePath = nodeBinaryPath ? nodeBinaryPath : userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath;
             const adapterPath = adapterBinaryPath ? adapterBinaryPath : userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath;
@@ -204,7 +205,6 @@ task(
 
         try {
             await server.listen(commandArgs.nodeCommands, commandArgs.adapterCommands, false);
-
             await waitForNodeToBeReady(currentNodePort);
             await waitForNodeToBeReady(currentAdapterPort, true);
             await configureNetwork(config, network, currentAdapterPort ? currentAdapterPort : currentNodePort);
