@@ -10,7 +10,7 @@ import {
     NETWORK_ETH,
     NETWORK_GAS,
     NETWORK_GAS_PRICE,
-    CHOPSTICKS_START_PORT,
+    NODE_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     POLKAVM_TEST_NODE_NETWORK_NAME,
     RPC_ENDPOINT_PATH,
@@ -31,12 +31,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             nodeCommands.push(`--endpoint=${cliCommands.fork}`);
         } else if (cliCommands.nodeBinaryPath) {
             nodeCommands.push(cliCommands.nodeBinaryPath);
-        } else {
-            throw new PolkaVMNodePluginError('Binary path not specified.');
         }
-
-        if (cliCommands.port) {
-            nodeCommands.push(`--port=${cliCommands.port}`);
+        if (cliCommands.rpcPort) {
+            nodeCommands.push(`--rpc-port=${cliCommands.rpcPort}`);
         }
 
         if (cliCommands.adapterEndpoint) {
@@ -45,9 +42,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.port) {
+        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.rpcPort) {
             adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
-        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.port) {
+        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
@@ -59,43 +56,45 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push('--dev');
             if (cliCommands.nodeBinaryPath) { nodeCommands.push('--dev') }
         }
-    } else if (args && Object.values(args).find((v) => v !== undefined)) {
-        if (args.forking) {
+    }
+    
+    if (args && Object.values(args).find((v) => v !== undefined)) {
+        if (args.forking && !cliCommands?.fork) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
 
             nodeCommands.push(`--endpoint=${args.forking.url}`);
-        } else if (args.nodeCommands?.nodeBinaryPath) {
+        } else if (args.nodeCommands?.nodeBinaryPath && !cliCommands?.nodeBinaryPath) {
             nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
         } else {
             throw new PolkaVMNodePluginError('Binary path not specified.');
         }
 
-        if (args.nodeCommands?.port) {
-            nodeCommands.push(`--rpc-port=${args.nodeCommands.port}`);
+        if (args.nodeCommands?.rpcPort && !cliCommands?.rpcPort) {
+            nodeCommands.push(`--rpc-port=${args.nodeCommands.rpcPort}`);
         }
 
-        if (args.adapterCommands?.adapterEndpoint) {
+        if (args.adapterCommands?.adapterEndpoint && !cliCommands?.adapterEndpoint) {
             adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
-        } else {
+        } else if (!cliCommands?.adapterEndpoint){
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
+        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.rpcPort) {
             adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
-        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.port) {
+        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
-        if (args.adapterCommands?.buildBlockMode) {
+        if (args.adapterCommands?.buildBlockMode && !!cliCommands?.buildBlockMode) {
             nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
         }
 
-        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev) {
+        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev && !cliCommands?.dev) {
             nodeCommands.push(`--dev`)
         }
 
-        if (args.adapterCommands?.dev) {
+        if (args.adapterCommands?.dev && !cliCommands?.dev) {
             adapterCommands.push('--dev');
         }
     }
@@ -191,7 +190,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
 
 export function getNetworkConfig(url: string) {
     return {
-        accounts: NETWORK_ACCOUNTS.REMOTE,
+        accounts: NETWORK_ACCOUNTS.POLKAVM,
         gas: NETWORK_GAS.AUTO,
         gasPrice: NETWORK_GAS_PRICE.AUTO,
         gasMultiplier: 1,
@@ -214,7 +213,7 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
 
 export async function startServer(commands: CommandArguments, nodePath?: string, adapterPath?: string) {
 
-    const currentNodePort = await getAvailablePort(commands.nodeCommands?.port ? commands.nodeCommands.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
+    const currentNodePort = await getAvailablePort(commands.nodeCommands?.rpcPort ? commands.nodeCommands.rpcPort : NODE_START_PORT, MAX_PORT_ATTEMPTS);
     const currentAdapterPort = await getAvailablePort(commands.adapterCommands?.adapterPort ? commands.adapterCommands.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
     const updatedCommands = Object.assign({}, commands, { nodeCommands: { port: currentNodePort }, adapterCommands: { adapterPort: currentAdapterPort } })
     const commandArgs = constructCommandArgs(updatedCommands);
