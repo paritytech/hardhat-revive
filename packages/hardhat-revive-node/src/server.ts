@@ -14,7 +14,7 @@ export class JsonRpcServer implements RpcServer {
     constructor(
         private readonly nodeBinaryPath: string | undefined,
         private readonly adapterBinaryPath: string | undefined
-    ) {}
+    ) { }
 
     public listen(nodeArgs: string[] = [], adapterArgs: string[] = [], blockProcess: boolean = true): Promise<void> {
         return new Promise((resolve, reject) => {
@@ -37,7 +37,7 @@ export class JsonRpcServer implements RpcServer {
             this.serverPort = nodePort;
 
             this.serverProcess = spawn(nodeCommand, nodeCommandArgs, { stdio: stdioConfig });
-            
+
             const adapterCommand = this.adapterBinaryPath;
 
             if (!adapterCommand) {
@@ -95,7 +95,6 @@ export class JsonRpcServer implements RpcServer {
         });
     }
 
-    
     public stop(): Promise<void> {
         return new Promise((resolve) => {
             if (this.adapterProcess && !this.adapterProcess.killed) {

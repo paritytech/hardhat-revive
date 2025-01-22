@@ -130,7 +130,6 @@ task(TASK_NODE_POLKAVM, 'Starts a JSON-RPC server for PolkaVM node')
                     forkBlockNumber,
                 });
 
-
             const nodePath = nodeBinaryPath ? nodeBinaryPath : userConfig.networks?.hardhat?.nodeConfig?.nodeBinaryPath;
             const adapterPath = adapterBinaryPath ? adapterBinaryPath : userConfig.networks?.hardhat?.adapterConfig?.adapterBinaryPath;
 
