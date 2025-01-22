@@ -10,9 +10,10 @@ import {
     NETWORK_ETH,
     NETWORK_GAS,
     NETWORK_GAS_PRICE,
-    CHOPSTICKS_START_PORT,
+    NODE_START_PORT,
     ETH_RPC_ADAPTER_START_PORT,
     POLKAVM_TEST_NODE_NETWORK_NAME,
+    RPC_ENDPOINT_PATH,
 } from './constants';
 import { PolkaVMNodePluginError } from './errors';
 import { CliCommands, CommandArguments, SplitCommands } from './types';
@@ -30,12 +31,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             nodeCommands.push(`--endpoint=${cliCommands.fork}`);
         } else if (cliCommands.nodeBinaryPath) {
             nodeCommands.push(cliCommands.nodeBinaryPath);
-        } else {
-            throw new PolkaVMNodePluginError('Binary path not specified.');
         }
-
-        if (cliCommands.port) {
-            nodeCommands.push(`--port=${cliCommands.port}`);
+        if (cliCommands.rpcPort) {
+            nodeCommands.push(`--rpc-port=${cliCommands.rpcPort}`);
         }
 
         if (cliCommands.adapterEndpoint) {
@@ -44,53 +42,59 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.port) {
+        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.rpcPort) {
             adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
-        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.port) {
+        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
-        if (cliCommands?.buildBlockMode) {
+        if (cliCommands.buildBlockMode && cliCommands.fork) {
             nodeCommands.push(`--build-block-mode=${cliCommands.buildBlockMode}`);
         }
 
-        if (cliCommands?.dev) {
+        if (cliCommands.dev) {
             adapterCommands.push('--dev');
+            if (cliCommands.nodeBinaryPath) { nodeCommands.push('--dev') }
         }
-    } else if (args && Object.values(args).find((v) => v !== undefined)) {
-        console.log(args)
-        if (args.forking) {
+    }
+    
+    if (args && Object.values(args).find((v) => v !== undefined)) {
+        if (args.forking && !cliCommands?.fork) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
 
             nodeCommands.push(`--endpoint=${args.forking.url}`);
-        } else if (args.nodeCommands?.nodeBinaryPath) {
+        } else if (args.nodeCommands?.nodeBinaryPath && !cliCommands?.nodeBinaryPath) {
             nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
         } else {
             throw new PolkaVMNodePluginError('Binary path not specified.');
         }
 
-        if (args.nodeCommands?.port) {
-            nodeCommands.push(`--port=${args.nodeCommands.port}`);
+        if (args.nodeCommands?.rpcPort && !cliCommands?.rpcPort) {
+            nodeCommands.push(`--rpc-port=${args.nodeCommands.rpcPort}`);
         }
 
-        if (args.adapterCommands?.adapterEndpoint) {
+        if (args.adapterCommands?.adapterEndpoint && !cliCommands?.adapterEndpoint) {
             adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
-        } else {
+        } else if (!cliCommands?.adapterEndpoint){
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.port) {
+        if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort !== args.nodeCommands?.rpcPort) {
             adapterCommands.push(`--rpc-port=${args.adapterCommands.adapterPort}`);
-        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.port) {
+        } else if (args.adapterCommands?.adapterPort && args.adapterCommands?.adapterPort === args.nodeCommands?.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
-        if (args.adapterCommands?.buildBlockMode) {
+        if (args.adapterCommands?.buildBlockMode && !!cliCommands?.buildBlockMode) {
             nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
         }
 
-        if (args.adapterCommands?.dev) {
+        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev && !cliCommands?.dev) {
+            nodeCommands.push(`--dev`)
+        }
+
+        if (args.adapterCommands?.dev && !cliCommands?.dev) {
             adapterCommands.push('--dev');
         }
     }
@@ -117,75 +121,45 @@ export async function isPortAvailable(port: number): Promise<boolean> {
     return availableIPv4 && availableIPv6;
 }
 
+function setPayload(adapter?: boolean): object {
+
+    return {
+        jsonrpc: '2.0',
+        method: adapter ? RPC_ENDPOINT_PATH : "state_getRuntimeVersion",
+        params: [],
+        id: 1,
+    };
+}
+
 export async function waitForNodeToBeReady(port: number, adapter: boolean = false, maxAttempts: number = 20): Promise<void> {
     const rpcEndpoint = `http://127.0.0.1:${port}`;
 
-    if (adapter) {
-        const payload = {
-            jsonrpc: '2.0',
-            method: 'eth_chainId',
-            params: [],
-            id: 1,
-        };
+    const payload = setPayload(adapter);
 
-        let attempts = 0;
-        let waitTime = 1000;
-        const backoffFactor = 2;
-        const maxWaitTime = 30000;
+    let attempts = 0;
+    let waitTime = 1000;
+    const backoffFactor = 2;
+    const maxWaitTime = 30000;
 
-        while (attempts < maxAttempts) {
-            try {
-                const response = await axios.post(rpcEndpoint, payload);
+    while (attempts < maxAttempts) {
+        try {
+            const response = await axios.post(rpcEndpoint, payload);
 
-                if (response.data && response.data.result) {
-                    return;
-                }
-            } catch (e: any) {
-                // If it fails, it will just try again
+            if (response.status == 200) {
+                return;
             }
-
-            attempts++;
-
-            await new Promise((r) => setTimeout(r, waitTime));
-
-            waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
+        } catch (e: any) {
+            // If it fails, it will just try again
         }
 
-        throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
-    } else {
-        const payload = {
-            jsonrpc: '2.0',
-            method: 'state_call',
-            params: ["AssetConversionApi_quote_price_tokens_for_exact_tokens", "0x0100000204320504f6faef3001000000000000000000000001"],
-            id: 1,
-        };
+        attempts++;
 
-        let attempts = 0;
-        let waitTime = 1000;
-        const backoffFactor = 2;
-        const maxWaitTime = 30000;
+        await new Promise((r) => setTimeout(r, waitTime));
 
-        while (attempts < maxAttempts) {
-            try {
-                const response = await axios.post(rpcEndpoint, payload);
-
-                if (response.data && response.data.result) {
-                    return;
-                }
-            } catch (e: any) {
-            }
-
-            attempts++;
-
-            await new Promise((r) => setTimeout(r, waitTime));
-
-            waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
-        }
-
-        throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
-
+        waitTime = Math.min(waitTime * backoffFactor, maxWaitTime);
     }
 
+    throw new PolkaVMNodePluginError("Server didn't respond after multiple attempts");
 }
 
 export async function getAvailablePort(startPort: number, maxAttempts: number): Promise<number> {
@@ -216,7 +190,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
 
 export function getNetworkConfig(url: string) {
     return {
-        accounts: NETWORK_ACCOUNTS.REMOTE,
+        accounts: NETWORK_ACCOUNTS.POLKAVM,
         gas: NETWORK_GAS.AUTO,
         gasPrice: NETWORK_GAS_PRICE.AUTO,
         gasMultiplier: 1,
@@ -224,7 +198,7 @@ export function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
-        chainId: 420420421,
+        chainId: 420420420,
     };
 }
 
@@ -239,7 +213,7 @@ export async function configureNetwork(config: HardhatConfig, network: any, port
 
 export async function startServer(commands: CommandArguments, nodePath?: string, adapterPath?: string) {
 
-    const currentNodePort = await getAvailablePort(commands.nodeCommands?.port ? commands.nodeCommands.port : CHOPSTICKS_START_PORT, MAX_PORT_ATTEMPTS);
+    const currentNodePort = await getAvailablePort(commands.nodeCommands?.rpcPort ? commands.nodeCommands.rpcPort : NODE_START_PORT, MAX_PORT_ATTEMPTS);
     const currentAdapterPort = await getAvailablePort(commands.adapterCommands?.adapterPort ? commands.adapterCommands.adapterPort : ETH_RPC_ADAPTER_START_PORT, MAX_PORT_ATTEMPTS);
     const updatedCommands = Object.assign({}, commands, { nodeCommands: { port: currentNodePort }, adapterCommands: { adapterPort: currentAdapterPort } })
     const commandArgs = constructCommandArgs(updatedCommands);

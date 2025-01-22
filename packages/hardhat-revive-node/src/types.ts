@@ -2,7 +2,7 @@ import { HardhatNetworkForkingUserConfig } from "hardhat/types";
 
 export interface CliCommands {
     nodeBinaryPath?: string;
-    port?: number;
+    rpcPort?: number;
     adapterBinaryPath?: string;
     adapterEndpoint?: string;
     adapterPort?: number;
@@ -14,7 +14,8 @@ export interface CliCommands {
 
 export interface NodeConfig {
     nodeBinaryPath?: string;
-    port?: number;
+    rpcPort?: number;
+    dev?: boolean;
 }
 
 export interface AdapterConfig {
