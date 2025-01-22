@@ -1,5 +1,5 @@
 # hardhat-revive-node
-Plugin for running an in-memory PolkaVM node.
+Plugin for running a mock in-memory PolkaVM node.
 
 ### Description
 This plugin enables the usage of a local instance of the PolkaVM node for testing,
