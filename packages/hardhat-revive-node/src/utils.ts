@@ -31,12 +31,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             nodeCommands.push(`--endpoint=${cliCommands.fork}`);
         } else if (cliCommands.nodeBinaryPath) {
             nodeCommands.push(cliCommands.nodeBinaryPath);
-        } else {
-            throw new PolkaVMNodePluginError('Binary path not specified.');
         }
-
-        if (cliCommands.port) {
-            nodeCommands.push(`--port=${cliCommands.port}`);
+        if (cliCommands.rpcPort) {
+            nodeCommands.push(`--rpc-port=${cliCommands.rpcPort}`);
         }
 
         if (cliCommands.adapterEndpoint) {
@@ -45,9 +42,9 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
-        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.port) {
+        if (cliCommands.adapterPort && cliCommands.adapterPort !== cliCommands.rpcPort) {
             adapterCommands.push(`--rpc-port=${cliCommands.adapterPort}`);
-        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.port) {
+        } else if (cliCommands.adapterPort && cliCommands.adapterPort === cliCommands.rpcPort) {
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
@@ -59,25 +56,27 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             adapterCommands.push('--dev');
             if (cliCommands.nodeBinaryPath) { nodeCommands.push('--dev') }
         }
-    } else if (args && Object.values(args).find((v) => v !== undefined)) {
-        if (args.forking) {
+    }
+    
+    if (args && Object.values(args).find((v) => v !== undefined)) {
+        if (args.forking && !cliCommands?.fork) {
             nodeCommands.push(`npx`);
             nodeCommands.push(`@acala-network/chopsticks@latest`);
 
             nodeCommands.push(`--endpoint=${args.forking.url}`);
-        } else if (args.nodeCommands?.nodeBinaryPath) {
+        } else if (args.nodeCommands?.nodeBinaryPath && !cliCommands?.nodeBinaryPath) {
             nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
         } else {
             throw new PolkaVMNodePluginError('Binary path not specified.');
         }
 
-        if (args.nodeCommands?.rpcPort) {
+        if (args.nodeCommands?.rpcPort && !cliCommands?.rpcPort) {
             nodeCommands.push(`--rpc-port=${args.nodeCommands.rpcPort}`);
         }
 
-        if (args.adapterCommands?.adapterEndpoint) {
+        if (args.adapterCommands?.adapterEndpoint && !cliCommands?.adapterEndpoint) {
             adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
-        } else {
+        } else if (!cliCommands?.adapterEndpoint){
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
@@ -87,15 +86,15 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             throw new PolkaVMNodePluginError('Adapter and node cannot share the same port.');
         }
 
-        if (args.adapterCommands?.buildBlockMode) {
+        if (args.adapterCommands?.buildBlockMode && !!cliCommands?.buildBlockMode) {
             nodeCommands.push(`--build-block-mode=${args.adapterCommands.buildBlockMode}`);
         }
 
-        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev) {
+        if (args.nodeCommands?.nodeBinaryPath && args.nodeCommands.dev && !cliCommands?.dev) {
             nodeCommands.push(`--dev`)
         }
 
-        if (args.adapterCommands?.dev) {
+        if (args.adapterCommands?.dev && !cliCommands?.dev) {
             adapterCommands.push('--dev');
         }
     }
@@ -191,7 +190,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
 
 export function getNetworkConfig(url: string) {
     return {
-        accounts: NETWORK_ACCOUNTS.REMOTE,
+        accounts: NETWORK_ACCOUNTS.POLKAVM,
         gas: NETWORK_GAS.AUTO,
         gasPrice: NETWORK_GAS_PRICE.AUTO,
         gasMultiplier: 1,
