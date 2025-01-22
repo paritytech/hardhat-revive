@@ -75,6 +75,14 @@ such as:
 - Have the [`solc`](https://github.com/ethereum/solidity) binary installed.
 - Have a build of LLVM 18.1.4 or later including `compiler-rt`
 
-Regarding `hardhat` compatibility, since it's not set as part of the `hardhat`
+Regarding `hardhat` compatibility, even though it's set as part of the `hardhat`
 type in the `NetworksConfig` type, it is not compatible with hardhat-only helpers,
-such as `time` and `loadFixture` from `@nomicfoundation/hardhat-toolbox/network-helpers`.
+such as `time` and `loadFixture` from `@nomicfoundation/hardhat-toolbox/network-helpers`,
+due to the node missing some rpc calls necessary for these calls to work.
+
+When running against a local node, or against a fork of the live chain, you must
+make sure that the binaries employed are compatible with eachother. In order to
+do this, you can check inside pallet revive's [`Cargo.toml`](https://github.com/paritytech/revive/blob/fe1b3258d2956e51e2edd86f2e77898e6b142729/Cargo.toml#L76)
+in order to see which commit of the polkadot-sdk you should use to build the
+`substrate-node` and `eth-rpc-adapter` binaries. If there is a missmatch betwween
+these versions, deployment will fail with `CodeRejected` or `Metadata error: The generated code is not compatible with the node`.

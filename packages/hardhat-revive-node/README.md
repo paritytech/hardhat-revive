@@ -40,7 +40,7 @@ type to see the available configuration options.
 
 | 🔧 Command                          | 📄 Description                                                                                                       |
 |-------------------------------------|----------------------------------------------------------------------------------------------------------------------|
-| --port                              | Port on which the server should listen. Defaults to 8000.                                                            |
+| --rpc-port                          | Port on which the server should listen. Defaults to 8000.                                                            |
 | --node-binary-path                  | Path to the substrate node binary.                                                                                   |
 | --adapter-endpoint                  | Endpoint to which the adapter will connect to. Defaults to ws://localhost:8000.                                      |
 | --adapter-binary-path               | Path to the eth-rpc-adapter binary.                                                                                  |
@@ -52,24 +52,33 @@ type to see the available configuration options.
 
 ### Configuration for testing
 When used for testing you have two options, either provide the configuration inside
-the `hardhat.config.{ts,js}` file, or run the node in a separate terminal and
-provide the configuration through the cli arguments defined in the previous section,
-to then run the tests against `localhost`, in this manner:
-```bash
-npx hardhat test --network localhost
-```
+the `hardhat.config.{ts,js}` file or
+provide the configuration through the cli arguments defined in the previous section.
 
-When going with this last option, you will encounter this error with tests that
+To run the node you can run the node with:
+```bash
+npx hardhat node
+```
+Having specified previously `polkavm: true` in the config file, or just run:
+```bash
+npx hardhat node-polkavm
+```
+Which will also initiate the node.
+
+You will encounter this error with tests that
 use certain helpers:
 ```bash
 OnlyHardhatNetworkError: This helper can only be used with Hardhat Network. You are connected to 'localhost'.
 ```
 
-To avoid this, you can just apply the configuration in the `hardhat.config` file
-and run the tests normally:
+Until now there's no way to avoid this, since there are certain rpc calls that are
+required to comply with `hardhat`'s network spec and are not present yet in the node.
+
+As long as `polkavm` is set to `true`, you can also run the tests directly using:
 ```bash
 npx hardhat test
 ```
+Which will start the node in a separate process and run the tests against it.
 
 When using the `config` field, you must define the `hardhat` options, such as the following:
 
@@ -98,8 +107,16 @@ Pleaser refer to the [CommandArguments](/packages/hardhat-revive-node/src/types.
 type to see the available configuration options.
 
 ### Compatibility
-Regarding `hardhat` compatibility, since it's set as part of the `hardhat`
+Regarding `hardhat` compatibility, even though it's set as part of the `hardhat`
 type in the `NetworksConfig` type, it is not compatible with hardhat-only helpers,
-such as `time` and `loadFixture` from `@nomicfoundation/hardhat-toolbox/network-helpers`.
+such as `time` and `loadFixture` from `@nomicfoundation/hardhat-toolbox/network-helpers`,
+due to the node missing some rpc calls necessary for these calls to work.
+
+When running against a local node, or against a fork of the live chain, you must
+make sure that the binaries employed are compatible with eachother. In order to
+do this, you can check inside pallet revive's [`Cargo.toml`](https://github.com/paritytech/revive/blob/fe1b3258d2956e51e2edd86f2e77898e6b142729/Cargo.toml#L76)
+in order to see which commit of the polkadot-sdk you should use to build the
+`substrate-node` and `eth-rpc-adapter` binaries. If there is a missmatch betwween
+these versions, deployment will fail with `CodeRejected` or `Metadata error: The generated code is not compatible with the node`.
 
 Further compatibility limitations have not been found at this point.
