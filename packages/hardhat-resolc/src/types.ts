@@ -73,6 +73,8 @@ export interface ResolcConfig {
         disableSolcOptimizer?: boolean;
         // Try to recompile with -Oz if the bytecode is too large.
         fallbackToOptimizingForSize?: boolean;
+        // Compile in batches. Useful for environmnents with limited resources and large number of files.
+        batchSize?: number;
     };
 }
 
@@ -136,4 +138,12 @@ export interface SolcInput {
 export interface SolcConfigData {
     compiler: SolcConfig;
     file?: string;
+}
+
+export interface ContractBatch {
+    [key: string]: object | string;
+}
+
+export interface ContractSource {
+    [key: string]: object;
 }
