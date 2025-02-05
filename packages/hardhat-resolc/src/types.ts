@@ -147,3 +147,19 @@ export interface ContractBatch {
 export interface ContractSource {
     [key: string]: object;
 }
+
+export interface Sources {
+    [key: string]: {
+        id: number,
+        ast: object
+    }
+}
+
+export interface CompiledOutput {
+    contracts: ContractSource,
+    sources: Sources,
+    errors: string[],
+    version: string,
+    long_version: string,
+    revive_version: string,
+}

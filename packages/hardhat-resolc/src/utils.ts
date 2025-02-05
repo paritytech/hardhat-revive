@@ -1,6 +1,6 @@
 import { Artifact, CompilerInput } from "hardhat/types";
 import { ARTIFACT_FORMAT_VERSION } from "hardhat/internal/constants";
-import { ResolcConfig, SolcConfigData } from "./types";
+import { CompiledOutput, ResolcConfig, SolcConfigData } from "./types";
 import { COMPILER_RESOLC_NEED_EVM_CODEGEN } from "./constants";
 import chalk from 'chalk';
 import { ResolcPluginError } from "./errors";
@@ -448,4 +448,20 @@ export function orderSources(mapped: Map<string, string[]>): string[] {
   })
 
   return ordered
+}
+
+export function deepUpdate(a: CompiledOutput, b: CompiledOutput): CompiledOutput {
+  const keys = Object.keys(b.sources);
+  const lastId = Object.keys(a.sources).length - 1;
+  let nextIds = lastId + Object.keys(b.sources).length;
+  if (Object.keys(a.sources).length === 0) {
+      return b
+  } else {
+      keys.forEach((key) => {
+          a.contracts = Object.assign({}, a.contracts, { [key]: b.contracts[key] });
+          a.sources = Object.assign({}, a.sources, { [key]: { id: nextIds, ast: b.sources[key].ast } })
+          nextIds++
+      })
+  }
+  return a;
 }

@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
-import { ContractBatch, ContractSource, ResolcConfig } from '../types';
+import { CompiledOutput, ContractBatch, ContractSource, ResolcConfig } from '../types';
 import { CompilerInput } from 'hardhat/types';
-import { extractCommands, mapImports, orderSources } from '../utils';
+import { deepUpdate, extractCommands, mapImports, orderSources } from '../utils';
 
 export async function compileWithBinary(
     input: CompilerInput,
@@ -20,10 +20,11 @@ export async function compileWithBinary(
 
     const ordered = orderSources(map)
 
+    let parsedOutput: CompiledOutput = { contracts: {}, sources: {}, errors: [], version: '', long_version: '', revive_version: '' };
     if (batchSize) {
         let selectedContracts: ContractBatch = {};
-        for (let i = 0; i * batchSize < ordered.length; i++) {
-            selectedContracts = ordered.reduce((acc, key) => {
+        for (let i = 0; i < ordered.length; i += batchSize!) {
+            selectedContracts = ordered.slice(i, i + batchSize).reduce((acc, key) => {
                 acc[key] = input.sources[key];
                 return acc;
             }, {} as ContractSource);
@@ -47,9 +48,11 @@ export async function compileWithBinary(
                 process.stdin!.write(JSON.stringify(contractBatch));
                 process.stdin!.end();
             });
-
-            return JSON.parse(output)
+            const parsed: CompiledOutput = JSON.parse(output);
+            parsedOutput = deepUpdate(parsedOutput, parsed)
         };
+
+        return parsedOutput;
 
     } else {
         const output: string = await new Promise((resolve, reject) => {
