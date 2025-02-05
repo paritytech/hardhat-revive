@@ -1,4 +1,4 @@
-import { Artifact } from "hardhat/types";
+import { Artifact, CompilerInput } from "hardhat/types";
 import { ARTIFACT_FORMAT_VERSION } from "hardhat/internal/constants";
 import { ResolcConfig, SolcConfigData } from "./types";
 import { COMPILER_RESOLC_NEED_EVM_CODEGEN } from "./constants";
@@ -405,4 +405,47 @@ export function extractCommands(config: ResolcConfig): string[] {
     return extractRemainingCommands(config, commandArgs);
   
   };
+}
+
+export function extractImports(fileContent: string): string[] {
+  const importRegex =
+      /import\s+(?:"([^"]+)"|'([^']+)'|(?:[^'"]+)\s+from\s+(?:"([^"]+)"|'([^']+)'))\s*;/g;
+  let imports: string[] = [];
+  let match: RegExpExecArray | null;
+
+  while ((match = importRegex.exec(fileContent)) !== null) {
+      const importedPath = match[1] || match[2] || match[3] || match[4];
+      if (importedPath) {
+          imports.push(importedPath);
+      }
+  }
+  return imports;
+}
+
+export function mapImports(input: CompilerInput): Map<string, string[]> {
+  const keys = Object.keys(input.sources);
+  const map = new Map<string, string[]>();
+  for (let key of keys) {
+      const importArray = extractImports(input.sources[key].content);
+      map.set(key, importArray)
+  }
+  return map;
+}
+
+export function orderSources(mapped: Map<string, string[]>): string[] {
+  let ordered: string[] = [];
+
+  mapped.forEach((values, key) => {
+      for (let value of values) {
+          if (ordered.includes(value)) continue;
+
+          ordered.push(value);
+      }
+
+      if (ordered.includes(key)) return;
+
+      ordered.push(key)
+  })
+
+  return ordered
 }
