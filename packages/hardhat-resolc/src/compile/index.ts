@@ -3,6 +3,7 @@ import { ResolcConfig } from "../types";
 import { compileWithBinary } from "./binary";
 import { compileWithRemix } from "./remix";
 import { ResolcPluginError } from "../errors";
+import chalk from 'chalk';
 
 export interface ICompiler {
     compile(input: CompilerInput, config: ResolcConfig): Promise<any>;
@@ -17,6 +18,8 @@ export async function compile(resolcConfig: ResolcConfig, input: CompilerInput) 
         }
         compiler = new BinaryCompiler(resolcConfig);
     } else if (resolcConfig.compilerSource === 'remix') {
+        if (resolcConfig.settings.batchSize) console.warn(chalk.yellow('Batch compilation is only available for `binary` source.\nSetting batchSize will be ignored.'));
+        
         compiler = new RemixCompiler(resolcConfig);
     } else {
         throw new ResolcPluginError(`Incorrect compiler source: ${resolcConfig.compilerSource}`);
