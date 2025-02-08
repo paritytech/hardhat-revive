@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.4.1",
   "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
   "license": "AGPL-3.0",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "bugs": "https://github.com/bee344/hardhat-revive/issues",
   "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-resolc#readme",
   "repository": {
