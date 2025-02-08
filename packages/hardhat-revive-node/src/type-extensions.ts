@@ -13,18 +13,18 @@ declare module 'hardhat/types/config' {
     }
 
     interface HardhatNetworkConfig {
-        polkavm: boolean;
-        url: string;
+        polkavm?: boolean;
+        url?: string;
     }
 
     interface HttpNetworkConfig {
-        polkavm: boolean;
+        polkavm?: boolean;
         ethNetwork?: string;
     }
 }
 
 declare module 'hardhat/types/runtime' {
     interface Network {
-        polkavm: boolean;
+        polkavm?: boolean;
     }
 }
