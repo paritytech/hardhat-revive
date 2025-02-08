@@ -8,6 +8,9 @@ chain using `@acala-network/chopsticks` and use the Polkadot-SDK `eth-rpc-adapte
 to enable local testing.
 
 ### Requirements
+In order to use the plugin, it must be imported at the top of the `hardhat.config`
+file, in order to override the relevant `hardhat` tasks.
+
 Both when connecting to a live chain endpoint and when forking one, it is required that the
 path to the `eth-rpc-adapter` binary is specified, unless the endpoint you are
 connecting to is Ethereum compatible, otherwise all the calls will fail.
@@ -17,8 +20,6 @@ of the chain you are connecting to, else you will receive the following error:
 ```bash
 Metadata error: The generated code is not compatible with the node
 ```
-As of 14/01/2025, that version can be built from the Polkadot-SDK's [`stable2412`
-branch](https://github.com/paritytech/polkadot-sdk/tree/stable2412).
 
 ### Configuration of standalone node
 We can run the node locally as either a fork of a live chain or using local binaries.
@@ -49,6 +50,9 @@ type to see the available configuration options.
 | --build-block-mode                  | Build block mode for chopsticks.                                                                                     |
 | --fork                              | Endpoint of the chain to fork.                                                                                       |
 | --fork-block-number                 | Block hash or block number from where to fork.                                                                       |
+
+**NOTE**
+Usage of absolute paths are recommended.
 
 ### Configuration for testing
 When used for testing you have two options, either provide the configuration inside
