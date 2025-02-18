@@ -1,7 +1,7 @@
 import { CompilerInput } from "hardhat/types";
 import { ResolcConfig } from "../types";
 import { compileWithBinary } from "./binary";
-import { compileWithRemix } from "./remix";
+import { compileWithWasm } from "./wasm";
 import { ResolcPluginError } from "../errors";
 import chalk from 'chalk';
 
@@ -17,10 +17,10 @@ export async function compile(resolcConfig: ResolcConfig, input: CompilerInput) 
             throw new ResolcPluginError('resolc executable is not specified');
         }
         compiler = new BinaryCompiler(resolcConfig);
-    } else if (resolcConfig.compilerSource === 'remix') {
+    } else if (resolcConfig.compilerSource === 'wasm') {
         if (resolcConfig.settings.batchSize) console.warn(chalk.yellow('Batch compilation is only available for `binary` source.\nSetting batchSize will be ignored.'));
         
-        compiler = new RemixCompiler(resolcConfig);
+        compiler = new WasmCompiler(resolcConfig);
     } else {
         throw new ResolcPluginError(`Incorrect compiler source: ${resolcConfig.compilerSource}`);
     }
@@ -36,10 +36,10 @@ export class BinaryCompiler implements ICompiler {
     }
 }
 
-export class RemixCompiler implements ICompiler {
+export class WasmCompiler implements ICompiler {
     constructor(public config: ResolcConfig) {}
 
     public async compile(input: CompilerInput) {
-        return await compileWithRemix(input, this.config);
+        return await compileWithWasm(input);
     }
 }
