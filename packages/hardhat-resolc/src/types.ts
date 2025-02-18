@@ -8,7 +8,7 @@ type SuppresWarningsOpts = 'ecrecover' | 'sendtransfer' | 'extcodesize' | 'txori
 
 export interface ResolcConfig {
     version: string;
-    compilerSource?: 'binary' | 'remix',
+    compilerSource?: 'binary' | 'wasm',
     settings: {
         // Set the given path as the root of the source tree instead of the root of the filesystem. Passed to `solc` without changes.
         basePath?: string;
@@ -28,8 +28,6 @@ export interface ResolcConfig {
             parameters?: '0' | '1' | '2' | '3' | 's' | 'z';
             // Try to recompile with -Oz if the bytecode is too large.
             fallbackOz?: boolean;
-            // Optimizer runs. For use with the `remix` compilerSource.
-            runs?: number;
         };
         // Specify the path to the `solc` executable.
         solcPath?: string;
@@ -61,7 +59,7 @@ export interface ResolcConfig {
         llvmVerifyEach?: boolean;
         // Set the debug-logging option in LLVM. Only for testing and debugging
         llvmDebugLogging?: boolean;
-        // If compilerSource == "remix", this option is ignored.
+        // If compilerSource == "wasm", this option is ignored.
         compilerPath?: string;
         // Specific contracts present in source to be compiled
         contractsToCompile?: string[];
@@ -127,12 +125,6 @@ export interface SolcOutput {
         }
     }
     errors?: Array<SolcError>
-}
-
-export interface SolcInput {
-    [contractName: string]: {
-        content: string
-    }
 }
 
 export interface SolcConfigData {
