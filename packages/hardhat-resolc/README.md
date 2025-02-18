@@ -10,7 +10,7 @@ artifacts, in order to facilitate deployment or testing.
 ### Description
 This plugin overrides the `compile` tasks in order to replace compiler from `solc`
 to [pallet revive](https://github.com/paritytech/revive)'s `resolc`. At the same
-time it allows for selecting either `remix` as the compilation backend or the
+time it allows for selecting either `wasm` as the compilation backend or the
 `resolc` binary, with full support for their respective optional commands.
 
 ### Requirements
@@ -26,18 +26,12 @@ present and the path specified in the configuration.
 **NOTE**
 Usage of absolute paths are recommended.
 
-When using the `remix` backend for compilation, the solidity version of the project
-must be >= 0.8.0, since the backend is hardcoded for that compiler version.
-
 ### Configuration
 Please refer to the [ResolcConfig](/packages/hardhat-resolc/src/types.ts#L9) type
 to see the available configuration options, as well as the `resolc` compiler's 
 `--help` section for more detailed information on each.
 
-When using the `remix` backend for compilation, the only available configuration
-options are within the `optimization` field, and are enabling or disabling the
-optimization through the `enable` option and defining the number of `runs` for the
-optimizer under the option with the same name.
+When using the `wasm` backend for compilation, no further configuration is allowed.
 
 When using the `resolc` binary, the same configuration options as when using the
 binary on its own are available.
@@ -54,12 +48,8 @@ const config: HardhatUserConfig = {
     }
   },
   resolc: {
-    compilerSource: 'remix',
+    compilerSource: 'wasm',
     settings: {
-      optimizer: {
-        enabled: true,
-        runs: 400
-      },
       evmVersion: "istanbul"
     },
   },
