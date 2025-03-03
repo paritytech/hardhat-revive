@@ -6,9 +6,9 @@ import { compile, resolveInputs } from '@parity/revive';
 const exec = promisify(execCb);
 
 export async function compileWithWasm(sources: any): Promise<SolcOutput> {
-    sources = resolveInputs(sources)
+    const updatedSources = resolveInputs(sources)
 
-    const out = await compile(sources);
+    const out = await compile(updatedSources);
 
     return out;
 }
