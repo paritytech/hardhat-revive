@@ -325,7 +325,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper
 });
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
-    if (hre.network.polkavm) {
+    if (!hre.network.polkavm) {
         return await runSuper(taskArgs);
     }
 
