@@ -57,7 +57,7 @@ extendConfig((config, userConfig) => {
 extendEnvironment((hre) => {
     if (hre.network.config.polkavm) {
         hre.network.polkavm = hre.network.config.polkavm;
-
+        
         let artifactsPath = hre.config.paths.artifacts;
         if (!artifactsPath.endsWith('-pvm')) {
             artifactsPath = `${artifactsPath}-pvm`;
@@ -325,13 +325,15 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper
 });
 
 subtask(TASK_COMPILE_REMOVE_OBSOLETE_ARTIFACTS, async (taskArgs, hre, runSuper) => {
-    if (hre.network.polkavm) {
+    if (!hre.network.polkavm) {
         return await runSuper(taskArgs);
     }
 
     const artifactsDir = hre.config.paths.artifacts;
+
+    if (artifactsDir.slice(-4) !== '-pvm') fs.rmSync(artifactsDir, { recursive: true });
+
     const cacheDir = hre.config.paths.cache;
 
-    fs.rmSync(artifactsDir, { recursive: true });
-    fs.rmSync(cacheDir, { recursive: true });
+    if (cacheDir.slice(-4) !== '-pvm') fs.rmSync(cacheDir, { recursive: true });
 });

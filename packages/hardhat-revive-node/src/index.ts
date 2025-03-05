@@ -32,6 +32,7 @@ import { PolkaVMNodePluginError } from './errors';
 import { interceptAndWrapTasksWithNode } from './core/global-interceptor';
 import { runScriptWithHardhat } from './core/script-runner';
 import { AdapterConfig, NodeConfig, RpcServer } from './types';
+import './type-extensions';
 
 task(TASK_RUN).setAction(async (args, hre, runSuper) => {
     if (!hre.network.polkavm || hre.network.name !== HARDHAT_NETWORK_NAME) {
