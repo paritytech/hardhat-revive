@@ -145,8 +145,8 @@ subtask(
             contractName,
             sourceName,
             abi: contractOutput.abi,
-            bytecode,
-            deployedBytecode: bytecode,
+            bytecode: `0x${bytecode}`,
+            deployedBytecode: `0x${bytecode}`,
             linkReferences: {},
             deployedLinkReferences: {},
         };
