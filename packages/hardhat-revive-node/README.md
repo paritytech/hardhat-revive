@@ -107,6 +107,9 @@ const config: HardhatUserConfig = {
 In this example, since we are forking a live chain, we do not need to specify the
 node binary path.
 
+**NOTE** The `chainId` parameter inside `networks.hardhat` will be overwritten by
+the value the plugin retrieves from the chain it's connected to.
+
 Pleaser refer to the [CommandArguments](/packages/hardhat-revive-node/src/types.ts#L28)
 type to see the available configuration options.
 

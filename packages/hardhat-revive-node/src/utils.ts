@@ -57,7 +57,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
             if (cliCommands.nodeBinaryPath) { nodeCommands.push('--dev') }
         }
     }
-    
+
     if (args && Object.values(args).find((v) => v !== undefined)) {
         if (args.forking && !cliCommands?.fork) {
             nodeCommands.push(`npx`);
@@ -76,7 +76,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
 
         if (args.adapterCommands?.adapterEndpoint && !cliCommands?.adapterEndpoint) {
             adapterCommands.push(`--node-rpc-url=${args.adapterCommands.adapterEndpoint}`);
-        } else if (!cliCommands?.adapterEndpoint){
+        } else if (!cliCommands?.adapterEndpoint) {
             adapterCommands.push(`--node-rpc-url=ws://localhost:8000`);
         }
 
@@ -188,7 +188,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
     return taskArgs;
 }
 
-export function getNetworkConfig(url: string) {
+export function getNetworkConfig(url: string, chainId: number) {
     return {
         accounts: NETWORK_ACCOUNTS.POLKAVM,
         gas: NETWORK_GAS.AUTO,
@@ -198,15 +198,26 @@ export function getNetworkConfig(url: string) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
-        chainId: 420420420,
+        chainId,
     };
 }
 
 export async function configureNetwork(config: HardhatConfig, network: any, port: number) {
     const url = `${BASE_URL}:${port}`;
+    const payload = setPayload(true);
+    let chainId = 0;
+    try {
+        const response = await axios.post(url, payload);
+
+        if (response.status == 200) {
+            chainId = parseInt(response.data.result);
+        }
+    } catch (e: any) {
+        // If it fails, it will just try again
+    }
 
     network.name = POLKAVM_TEST_NODE_NETWORK_NAME;
-    network.config = getNetworkConfig(url);
+    network.config = getNetworkConfig(url, chainId);
     config.networks[network.name] = network.config;
     network.provider = await createProvider(config, network.name);
 }
