@@ -188,7 +188,7 @@ export function adjustTaskArgsForPort(taskArgs: string[], currentPort: number): 
     return taskArgs;
 }
 
-export function getNetworkConfig(url: string, chainId: number) {
+export function getNetworkConfig(url: string, chainId?: number) {
     return {
         accounts: NETWORK_ACCOUNTS.POLKAVM,
         gas: NETWORK_GAS.AUTO,
@@ -198,7 +198,7 @@ export function getNetworkConfig(url: string, chainId: number) {
         timeout: 20000,
         url,
         ethNetwork: NETWORK_ETH.LOCALHOST,
-        chainId,
+        chainId: chainId || 420420421,
     };
 }
 
