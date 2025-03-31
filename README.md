@@ -37,3 +37,4 @@ Overview of currently available plugins and those on the roadmap.
 
 * [Discord # solidity-smart-contracts](https://discord.com/channels/722223075629727774/1316832344748986398)
 * [Website](https://polkadot.com/)
+* [GitHub](https://github.com/paritytech)
