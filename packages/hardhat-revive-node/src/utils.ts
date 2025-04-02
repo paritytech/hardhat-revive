@@ -67,7 +67,7 @@ export function constructCommandArgs(args?: CommandArguments, cliCommands?: CliC
         } else if (args.nodeCommands?.nodeBinaryPath && !cliCommands?.nodeBinaryPath) {
             nodeCommands.push(args.nodeCommands?.nodeBinaryPath);
         } else {
-            throw new PolkaVMNodePluginError('Binary path not specified.');
+            throw new PolkaVMNodePluginError('Substrate Node Binary path not specified.');
         }
 
         if (args.nodeCommands?.rpcPort && !cliCommands?.rpcPort) {
