@@ -1,4 +1,4 @@
-# hardhat-revive-examples
+# Examples of using Hardhat plugin for Ethereum-compatible smart contracts on Polkadot
 
 Series of `hardhat` config files to work as examples on how to set up the hardhat
 configuration for different environments. This is not meant to be an extensive
