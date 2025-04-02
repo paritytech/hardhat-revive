@@ -1,6 +1,6 @@
 <div align="center">
 
-# Hardhat plugin for Ethereum-compatible smart contracts on Polkadot
+# Hardhat plugin for Ethereum-compatible smart contracts on Polkadot Hub
 
 <table>
   <tr>
@@ -27,7 +27,7 @@ Overview of currently available plugins and those on the roadmap.
 
 ## Getting Started
 
-* Find the instructions in Develop -> Smart Contracts -> Dev Environments -> [Hardhat](https://papermoonio.github.io/polkadot-mkdocs/develop/smart-contracts/dev-environments/hardhat/)
+* Find the instructions in Polkadot -> Develop -> Smart Contracts -> Dev Environments -> [Hardhat](https://papermoonio.github.io/polkadot-mkdocs/develop/smart-contracts/dev-environments/hardhat/)
 
 ## Usage
 
