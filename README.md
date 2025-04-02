@@ -27,14 +27,16 @@ Overview of currently available plugins and those on the roadmap.
 
 ## Getting Started
 
-* Find the instructions in Develop -> Smart Contracts -> Dev Environments -> [Hardhat](https://docs.polkadot.com/develop/smart-contracts/)
+* Find the instructions in Develop -> Smart Contracts -> Dev Environments -> [Hardhat](https://papermoonio.github.io/polkadot-mkdocs/develop/smart-contracts/dev-environments/hardhat/)
 
 ## Usage
 
-* For project examples, please see [Examples](https://github.com/paritytech/hardhat-revive/tree/main/packages/hardhat-revive-examples) folder and [Boilerplate](https://github.com/paritytech/create-polkadot-dapp).
+* For project examples, please see [Examples](https://github.com/paritytech/hardhat-revive/tree/main/examples) folder and [Boilerplate](https://github.com/paritytech/create-polkadot-dapp).
 
 ## Getting Help
 
-* [Discord # solidity-smart-contracts](https://discord.com/channels/722223075629727774/1316832344748986398)
-* [Website](https://polkadot.com/)
+* [Polkadot Discord # solidity-smart-contracts](https://discord.com/channels/722223075629727774/1316832344748986398)
+* [Polkadot Website](https://polkadot.com/)
 * [GitHub](https://github.com/paritytech)
+
+## Happy building! 👷‍♀️👷‍♂️
