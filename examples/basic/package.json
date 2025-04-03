@@ -1,0 +1,35 @@
+{
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "devDependencies": {
+      "@nomicfoundation/hardhat-chai-matchers": "^2.0.8",
+      "@nomicfoundation/hardhat-ethers": "^3.0.8",
+      "@nomicfoundation/hardhat-ignition": "^0.15.10",
+      "@nomicfoundation/hardhat-ignition-ethers": "^0.15.10",
+      "@nomicfoundation/hardhat-network-helpers": "^1.0.12",
+      "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+      "@nomicfoundation/hardhat-verify": "^2.0.13",
+      "@nomicfoundation/ignition-core": "^0.15.10",
+      "@openzeppelin/hardhat-upgrades": "^3.9.0",
+      "@typechain/ethers-v6": "^0.5.1",
+      "@typechain/hardhat": "^9.1.0",
+      "@types/chai": "^4.2.0",
+      "@types/mocha": ">=9.1.0",
+      "@types/node": ">=18.0.0",
+      "chai": "^4.2.0",
+      "ethers": "^6.13.5",
+      "hardhat": "^2.22.19",
+      "hardhat-gas-reporter": "^2.2.2",
+      "hardhat-resolc": "^0.0.7",
+      "hardhat-revive-node": "^0.0.6",
+      "solidity-coverage": "^0.8.14",
+      "ts-node": ">=8.0.0",
+      "typechain": "^8.3.2",
+      "typescript": ">=4.5.0"
+    },
+    "packageManager": "yarn@4.4.1+sha512.f825273d0689cc9ead3259c14998037662f1dcd06912637b21a450e8da7cfeb4b1965bbee73d16927baa1201054126bc385c6f43ff4aa705c8631d26e12460f1",
+    "dependencies": {
+      "@openzeppelin/contracts": "^5.2.0"
+    }
+  }
+  
