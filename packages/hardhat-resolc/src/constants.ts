@@ -16,6 +16,7 @@ export const defaultBinaryResolcConfig: ResolcConfig = {
     version: 'latest',
     compilerSource: 'binary',
     settings: {
+        compilerPath: 'resolc',
         optimizer: {
             enabled: true,
         }
