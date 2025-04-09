@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/packages/hardhat-resolc/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "11:00"
+      timezone: "America/New_York"
+    rebase-strategy: "auto"
+    groups:
+      parity:
+        patterns:
+          - "@parity/revive"
+    commit-message:
+      # Prefix all commit messages with "chore"
+      # include a list of updated dependencies
+      prefix: "chore"
+      include: "scope"
+    labels:
+      - "dependencies"
+    versioning-strategy: increase
