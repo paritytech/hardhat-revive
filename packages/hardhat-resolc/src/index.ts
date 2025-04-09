@@ -39,10 +39,6 @@ extendConfig((config, userConfig) => {
     if (config.resolc.compilerSource !== 'binary') {
         config.resolc = { ...defaultNpmResolcConfig, ...userConfig?.resolc };
         config.resolc.settings = { ...defaultNpmResolcConfig.settings, ...userConfig?.resolc?.settings };
-        config.resolc.settings.optimizer = {
-            ...defaultNpmResolcConfig.settings?.optimizer,
-            ...userConfig?.resolc?.settings?.optimizer,
-        };
     } else {
         config.resolc = { ...defaultBinaryResolcConfig, ...userConfig?.resolc };
         config.resolc.settings = { ...defaultBinaryResolcConfig.settings, ...userConfig?.resolc?.settings };
