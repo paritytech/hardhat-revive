@@ -9,12 +9,6 @@ const config: HardhatUserConfig = {
     },
   },
   resolc: {
-    compilerSource: 'remix',
-    settings: {
-      optimizer: {
-        enabled: false,
-      },
-      evmVersion: "istanbul"
-    },
+    compilerSource: 'npm',
   },
 };
