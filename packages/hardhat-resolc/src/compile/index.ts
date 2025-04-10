@@ -1,7 +1,7 @@
 import { CompilerInput } from "hardhat/types";
 import { ResolcConfig } from "../types";
 import { compileWithBinary } from "./binary";
-import { compileWithRemix } from "./remix";
+import { compileWithNpm } from "./npm";
 import { ResolcPluginError } from "../errors";
 import chalk from 'chalk';
 
@@ -13,14 +13,14 @@ export async function compile(resolcConfig: ResolcConfig, input: CompilerInput) 
     let compiler: ICompiler;
     
     if (resolcConfig.compilerSource === 'binary') {
-        if (resolcConfig.settings.solcPath === null) {
+        if (resolcConfig.settings?.solcPath === null) {
             throw new ResolcPluginError('resolc executable is not specified');
         }
         compiler = new BinaryCompiler(resolcConfig);
-    } else if (resolcConfig.compilerSource === 'remix') {
-        if (resolcConfig.settings.batchSize) console.warn(chalk.yellow('Batch compilation is only available for `binary` source.\nSetting batchSize will be ignored.'));
+    } else if (resolcConfig.compilerSource === 'npm') {
+        if (resolcConfig.settings?.batchSize) console.warn(chalk.yellow('Batch compilation is only available for `binary` source.\nSetting batchSize will be ignored.'));
         
-        compiler = new RemixCompiler(resolcConfig);
+        compiler = new NpmCompiler(resolcConfig);
     } else {
         throw new ResolcPluginError(`Incorrect compiler source: ${resolcConfig.compilerSource}`);
     }
@@ -36,10 +36,10 @@ export class BinaryCompiler implements ICompiler {
     }
 }
 
-export class RemixCompiler implements ICompiler {
+export class NpmCompiler implements ICompiler {
     constructor(public config: ResolcConfig) {}
 
     public async compile(input: CompilerInput) {
-        return await compileWithRemix(input, this.config);
+        return await compileWithNpm(input);
     }
 }
