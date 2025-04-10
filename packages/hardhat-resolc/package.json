@@ -31,7 +31,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@parity/revive": "^0.0.19",
+    "@parity/revive": "^0.0.21",
     "@types/debug": "^4",
     "@types/node": "^22.10.2",
     "debug": "^4.4.0",
