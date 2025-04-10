@@ -16,7 +16,7 @@ import {
 } from 'hardhat/builtin-tasks/task-names';
 import debug from 'debug';
 import { SolcMultiUserConfigExtractor, SolcSoloUserConfigExtractor, SolcStringUserConfigExtractor, SolcUserConfigExtractor } from './config-extractor';
-import { defaultRemixResolcConfig, defaultBinaryResolcConfig, RESOLC_ARTIFACT_FORMAT_VERSION } from './constants';
+import { defaultNpmResolcConfig, defaultBinaryResolcConfig, RESOLC_ARTIFACT_FORMAT_VERSION } from './constants';
 import { extendEnvironment, extendConfig, subtask, task } from 'hardhat/internal/core/config/config-env';
 import { Artifacts } from 'hardhat/internal/artifacts';
 import { ArtifactsEmittedPerFile, CompilationJob, CompilerInput, CompilerOutput, HardhatRuntimeEnvironment, RunSuperFunction, SolcBuild, TaskArguments } from 'hardhat/types';
@@ -37,19 +37,11 @@ const extractors: SolcUserConfigExtractor[] = [
 
 extendConfig((config, userConfig) => {
     if (config.resolc.compilerSource !== 'binary') {
-        config.resolc = { ...defaultRemixResolcConfig, ...userConfig?.resolc };
-        config.resolc.settings = { ...defaultRemixResolcConfig.settings, ...userConfig?.resolc?.settings };
-        config.resolc.settings.optimizer = {
-            ...defaultRemixResolcConfig.settings.optimizer,
-            ...userConfig?.resolc?.settings?.optimizer,
-        };
+        config.resolc = { ...defaultNpmResolcConfig, ...userConfig?.resolc };
+        config.resolc.settings = { ...defaultNpmResolcConfig.settings, ...userConfig?.resolc?.settings };
     } else {
         config.resolc = { ...defaultBinaryResolcConfig, ...userConfig?.resolc };
         config.resolc.settings = { ...defaultBinaryResolcConfig.settings, ...userConfig?.resolc?.settings };
-        config.resolc.settings.optimizer = {
-            ...defaultBinaryResolcConfig.settings.optimizer,
-            ...userConfig?.resolc?.settings?.optimizer,
-        };
     }
 
 });
@@ -91,7 +83,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_NAMES, async (args: { sourcePaths: stri
     if (!hre.network.polkavm) {
         return await runSuper(args);
     }
-    const contractsToCompile: string[] | undefined = hre.config.resolc.settings.contractsToCompile;
+    const contractsToCompile: string[] | undefined = hre.config.resolc.settings?.contractsToCompile;
 
     if (!contractsToCompile || contractsToCompile.length === 0) {
         return await runSuper(args);
@@ -113,7 +105,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILATION_JOBS, async (args, hre, runSuper) 
 
     jobs.forEach((job: any) => {
         job.solidityConfig.resolc = hre.config.resolc;
-        job.solidityConfig.resolc.settings.compilerPath = hre.config.resolc.settings.compilerPath;
+        job.solidityConfig.resolc.settings.compilerPath = hre.config.resolc.settings?.compilerPath;
 
     });
 
@@ -317,7 +309,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_COMPILER_INPUT, async (taskArgs, hre, runSuper
         return compilerInput;
     }
 
-    if (hre.config.resolc.settings.suppressWarnings && hre.config.resolc.settings.suppressWarnings.length > 0) {
+    if (hre.config.resolc.settings?.suppressWarnings && hre.config.resolc.settings.suppressWarnings.length > 0) {
         compilerInput.suppressedWarnings = hre.config.resolc.settings.suppressWarnings;
     }
 

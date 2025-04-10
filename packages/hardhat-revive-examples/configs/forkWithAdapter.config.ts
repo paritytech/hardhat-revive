@@ -21,14 +21,7 @@ const config: HardhatUserConfig = {
     },
   },
   resolc: {
-    compilerSource: 'remix',
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 400
-      },
-      evmVersion: "istanbul"
-    },
+    compilerSource: 'npm',
   },
 };
 
