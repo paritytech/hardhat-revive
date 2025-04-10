@@ -22,6 +22,7 @@ export async function compileWithBinary(
 
     let parsedOutput: CompiledOutput = { contracts: {}, sources: {}, errors: [], version: '', long_version: '', revive_version: '' };
     if (batchSize) {
+        console.log('`batchSize` is an experimental feature and may fail when used with smart contracts that employ relative imports.');
         let selectedContracts: ContractBatch = {};
         for (let i = 0; i < ordered.length; i += batchSize!) {
             selectedContracts = ordered.slice(i, i + batchSize).reduce((acc, key) => {
