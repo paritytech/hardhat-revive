@@ -41,10 +41,10 @@ export function updateDefaultCompilerConfig(solcConfigData: SolcConfigData, reso
 
   const settings = compiler.settings || {};
 
-  compiler.settings = { ...settings, optimizer: { ...resolc.settings.optimizer }, evmVersion: resolc.settings.evmVersion };
+  compiler.settings = { ...settings, optimizer: { ...resolc.settings?.optimizer }, evmVersion: resolc.settings?.evmVersion };
 
-  const forceEVMLA = resolc.settings.forceEVMLA && resolc.compilerSource === 'binary';
-  resolc.settings.forceEVMLA = forceEVMLA;
+  const forceEVMLA = resolc.settings?.forceEVMLA && resolc.compilerSource === 'binary';
+  resolc.settings!.forceEVMLA = forceEVMLA;
 
   const [major, minor] = getVersionComponents(compiler.version);
   if (major === 0 && minor < 7 && resolc.compilerSource === 'binary') {
@@ -69,7 +69,7 @@ export function pluralize(n: number, singular: string, plural?: string) {
 
 function extractYulCommands(config: ResolcConfig, commandArgs: string[]): string[] {
 
-  const settings = config.settings;
+  const settings = config.settings!;
 
   commandArgs.push(`--yul`);
 
@@ -120,7 +120,7 @@ function extractYulCommands(config: ResolcConfig, commandArgs: string[]): string
 }
 
 function extractLlvmIRCommands(config: ResolcConfig, commandArgs: string[]): string[] {
-  const settings = config.settings;
+  const settings = config.settings!;
 
   commandArgs.push(`--llvm-ir`);
 
@@ -168,7 +168,7 @@ function extractLlvmIRCommands(config: ResolcConfig, commandArgs: string[]): str
 
 function extractStandardJSONCommands(config: ResolcConfig, commandArgs: string[]): string[] {
 
-  const settings = config.settings;
+  const settings = config.settings!;
 
   commandArgs.push(`--standard-json`);
 
@@ -223,7 +223,7 @@ function extractStandardJSONCommands(config: ResolcConfig, commandArgs: string[]
 }
 
 function extractCombinedJSONCommands(config: ResolcConfig, commandArgs: string[]): string[] {
-  const settings = config.settings;
+  const settings = config.settings!;
 
   commandArgs.push(`--combined-json=${settings.combinedJson}`);
 
@@ -305,7 +305,7 @@ function extractCombinedJSONCommands(config: ResolcConfig, commandArgs: string[]
 }
 
 function extractRemainingCommands(config: ResolcConfig, commandArgs: string[]): string[] {
-  const settings = config.settings; 
+  const settings = config.settings!; 
 
   if (settings.libraries) {
     commandArgs.push(`-l=${settings.libraries}`)
@@ -384,19 +384,19 @@ export function extractCommands(config: ResolcConfig): string[] {
 
   const commandArgs: string[] = [];
 
-  if (config.settings.yul) {
+  if (config.settings?.yul) {
 
     return extractYulCommands(config, commandArgs);
 
-  } else if (config.settings.llvmIR) {
+  } else if (config.settings?.llvmIR) {
     
     return extractLlvmIRCommands(config, commandArgs);
     
-  } else if (config.settings.standardJson) {
+  } else if (config.settings?.standardJson) {
 
     return extractStandardJSONCommands(config, commandArgs);
 
-  } else if (config.settings.combinedJson) {
+  } else if (config.settings?.combinedJson) {
 
     return extractCombinedJSONCommands(config, commandArgs);
     

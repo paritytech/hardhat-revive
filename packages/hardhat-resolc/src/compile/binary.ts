@@ -10,7 +10,7 @@ export async function compileWithBinary(
     const {
         compilerPath,
         batchSize
-    } = config.settings;
+    } = config.settings!;
 
     const commands = extractCommands(config);
 
