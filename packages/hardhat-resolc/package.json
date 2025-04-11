@@ -33,7 +33,7 @@
   "dependencies": {
     "@parity/revive": "^0.0.21",
     "@types/debug": "^4",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.14.0",
     "debug": "^4.4.0",
     "hardhat": "^2.22.17",
     "solc": "^0.8.28",
