@@ -1,7 +1,7 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/packages/hardhat-resolc/"
+    directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
