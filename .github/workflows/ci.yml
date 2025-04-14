@@ -1,0 +1,19 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: main-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-e2e-hardhat-polkadot-plugin:
+    runs-on: ${{ matrix.os }}-latest
+
+    steps: 

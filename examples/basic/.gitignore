@@ -1,0 +1,24 @@
+# vscode
+.vscode
+
+# hardhat
+artifacts
+cache
+deployments
+node_modules
+coverage
+coverage.json
+typechain
+
+# hardhat-polkadot
+artifacts-pvm
+cache-pvm
+
+# don't push the environment vars!
+.env
+
+# Built application files
+.DS*
+*.apk
+*.ap_
+*.aab
