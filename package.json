@@ -1,9 +1,9 @@
 {
-  "name": "hardhat-polkadot-root",
+  "name": "root",
   "version": "0.0.7",
   "license": "AGPL-3.0",
   "packageManager": "yarn@4.4.1",
-  "author": "Parity Technologies",
+  "author": "Parity Technologies <admin@parity.io>",
   "workspaces": [
     "packages/*"
   ],

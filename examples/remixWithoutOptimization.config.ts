@@ -1,5 +1,5 @@
 import { HardhatUserConfig } from "hardhat/config";
-import "hardhat-resolc"
+import "@parity/hardhat-polkadot-resolc";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
@@ -9,6 +9,6 @@ const config: HardhatUserConfig = {
     },
   },
   resolc: {
-    compilerSource: 'npm',
+    compilerSource: "npm",
   },
 };

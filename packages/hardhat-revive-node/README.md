@@ -1,5 +1,5 @@
 # hardhat-polkadot-node
-Polkadot Hub [Hardhat](https://hardhat.org/) plugin to run a mock in-memory node.
+Polkadot [Hardhat](https://hardhat.org/) plugin to run a mock in-memory node.
 
 ### Compatibility
 - Not compatible with hardhat-only helpers, such as `time` and `loadFixture` from `@nomicfoundation/hardhat-toolbox/network-helpers`
@@ -9,24 +9,24 @@ Polkadot Hub [Hardhat](https://hardhat.org/) plugin to run a mock in-memory node
 ### Installation
 
 ```bash
-npm install -D @paritytech/hardhat-polkadot-node  # npm
-yarn add -D @paritytech/hardhat-polkadot-node     # yarn
+npm install -D @parity/hardhat-polkadot-node  # npm
+yarn add -D @parity/hardhat-polkadot-node     # yarn
 ```
 
 ### Commands
 
-Run a local Polkadot Hub node from a binary and initializes a JSON-RPC server.  
+Run a local Polkadot from a binary and initializes a JSON-RPC server.  
 
 ```bash
-npx hardhat node-polkadot
+npx hardhat node
 \ --node-binary-path /path/to/node 
 \ --adapter-binary-path /path/to/adapter
 ```
 
-Run a fork of a live Polkadot Hub chain and initializes a JSON-RPC.
+Run a fork of a live Polkadot chain and initializes a JSON-RPC.
 
 ```bash
-npx hardhat node-polkadot --fork wss://asset-hub-westend-rpc.dwellir.com 
+npx hardhat node --fork wss://asset-hub-westend-rpc.dwellir.com 
 \ --adapter-binary-path /path/to/adapter
 ```
 
