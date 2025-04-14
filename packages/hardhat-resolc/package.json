@@ -31,12 +31,13 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@parity/revive": "^0.0.21",
     "@types/debug": "^4",
-    "@types/node": "^22.10.2",
+    "@types/node": "^22.14.0",
     "debug": "^4.4.0",
-    "hardhat": "^2.22.17",
+    "hardhat": "^2.23.0",
     "solc": "^0.8.28",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.8.3"
   }
 }
