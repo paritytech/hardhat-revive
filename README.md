@@ -14,7 +14,7 @@
   </tr>
 </table>
 
-> Polkadot Hub is a rollup for developers to deploy high-performance Web3 applications. This repository provides plugins that integrate with the [Hardhat](https://hardhat.org/) environment for developing and deploying Ethereum-compatible smart contracts on the Polkadot Hub network.
+> Polkadot Hub is a service for developers to deploy high-performance Web3 applications. This repository provides plugins that integrate with the [Hardhat](https://hardhat.org/) environment for developing and deploying Ethereum-compatible smart contracts on the Polkadot Hub network.
 
 </div>
 
