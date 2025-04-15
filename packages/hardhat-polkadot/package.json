@@ -26,7 +26,6 @@
         "build": "tsc --build .",
         "build:dev": "tsc --build . --watch",
         "clean": "rimraf dist"
-
     },
     "files": [
         "dist/src/",
