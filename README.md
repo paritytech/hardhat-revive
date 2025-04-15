@@ -28,8 +28,8 @@ Overview of currently available plugins and those on the roadmap.
 
 ## Usage
 
-* For project examples, please see [Examples](https://github.com/paritytech/hardhat-revive/tree/main/examples) folder
-* To get started from a boilerplace use [create-polkadot-dapp](https://github.com/paritytech/create-polkadot-dapp).
+* See [Examples](https://github.com/paritytech/hardhat-revive/tree/main/examples)
+* Get started from a boilerplate with [create-polkadot-dapp](https://github.com/paritytech/create-polkadot-dapp).
 
 ## Getting Help
 
