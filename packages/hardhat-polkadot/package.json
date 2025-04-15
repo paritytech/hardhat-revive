@@ -1,12 +1,16 @@
 {
     "name": "@parity/hardhat-polkadot",
-    "version": "0.0.1",
-    "description": "Polkadot bundle of Hardhat plugins",
-    "repository": "github:paritytech/hardhat-polkadot",
-    "homepage": "https://github.com/paritytech/hardhat-polkadot/tree/main/packages/hardhat-polkadot",
     "author": "Parity Technologies <admin@parity.io>",
-    "license": "MIT",
-    "main": "dist/index.js",
+    "license": "AGPL-3.0",
+    "version": "0.0.1",
+    "bugs": "https://github.com/paritytech/hardhat-polkadot/issues",
+    "homepage": "https://github.com/paritytech/hardhat-polkadot/tree/master/packages/hardhat-polkadot#readme",
+    "repository": {
+        "directory": "packages/hardhat-polkadot",
+        "type": "git",
+        "url": "https://github.com/paritytech/hardhat-polkadot.git"
+    },
+    "description": "Polkadot bundle of Hardhat plugins",
     "types": "dist/index.d.ts",
     "exports": {
         ".": {
@@ -35,8 +39,8 @@
         "README.md"
     ],
     "dependencies": {
-        "@parity/hardhat-polkadot-node": "file:../hardhat-revive-node",
-        "@parity/hardhat-polkadot-resolc": "file:../hardhat-resolc"
+        "@parity/hardhat-polkadot-node": "workspace:^",
+        "@parity/hardhat-polkadot-resolc": "workspace:^"
     },
     "peerDependencies": {
         "hardhat": "^2.22.18"
