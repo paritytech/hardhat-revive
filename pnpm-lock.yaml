@@ -11,6 +11,9 @@ importers:
       '@types/node':
         specifier: ^22.14.1
         version: 22.14.1
+      prettier:
+        specifier: ^3.5.3
+        version: 3.5.3
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
@@ -19,10 +22,10 @@ importers:
     dependencies:
       '@parity/hardhat-polkadot-node':
         specifier: workspace:^
-        version: link:../hardhat-revive-node
+        version: link:../hardhat-polkadot-node
       '@parity/hardhat-polkadot-resolc':
         specifier: workspace:^
-        version: link:../hardhat-resolc
+        version: link:../hardhat-polkadot-resolc
       hardhat:
         specifier: ^2.22.18
         version: 2.23.0(ts-node@10.9.2(@types/node@22.14.1)(typescript@5.8.3))(typescript@5.8.3)
@@ -39,6 +42,71 @@ importers:
       typescript:
         specifier: ^5.8.3
         version: 5.8.3
+
+  packages/hardhat-polkadot-node:
+    dependencies:
+      '@types/debug':
+        specifier: ^4
+        version: 4.1.12
+      '@types/fs-extra':
+        specifier: ^11.0.4
+        version: 11.0.4
+      '@types/mocha':
+        specifier: ^10.0.10
+        version: 10.0.10
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.14.1
+      debug:
+        specifier: ^4.4.0
+        version: 4.4.0(supports-color@8.1.1)
+      hardhat:
+        specifier: ^2.22.17
+        version: 2.23.0(ts-node@10.9.2(@types/node@22.14.1)(typescript@5.8.3))(typescript@5.8.3)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.14.1)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.8.3
+    devDependencies:
+      axios:
+        specifier: ^1.8.4
+        version: 1.8.4(debug@4.4.0)
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
+
+  packages/hardhat-polkadot-resolc:
+    dependencies:
+      '@parity/revive':
+        specifier: ^0.0.21
+        version: 0.0.21(debug@4.4.0)
+      '@types/debug':
+        specifier: ^4
+        version: 4.1.12
+      '@types/node':
+        specifier: ^22.14.0
+        version: 22.14.1
+      debug:
+        specifier: ^4.4.0
+        version: 4.4.0(supports-color@8.1.1)
+      hardhat:
+        specifier: ^2.23.0
+        version: 2.23.0(ts-node@10.9.2(@types/node@22.14.1)(typescript@5.8.3))(typescript@5.8.3)
+      solc:
+        specifier: ^0.8.28
+        version: 0.8.29(debug@4.4.0)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@22.14.1)(typescript@5.8.3)
+      typescript:
+        specifier: ^5.8.3
+        version: 5.8.3
+    devDependencies:
+      chalk:
+        specifier: ^5.4.1
+        version: 5.4.1
 
   packages/hardhat-resolc:
     dependencies:
@@ -994,6 +1062,11 @@ packages:
   picomatch@4.0.2:
     resolution: {integrity: sha512-M7BAV6Rlcy5u+m6oPhAPFgJTzAioX/6B0DxyvDlo9l8+T3nLKbrczg2WLUyzd45L8RqfUMyGPzekbMvX2Ldkwg==}
     engines: {node: '>=12'}
+
+  prettier@3.5.3:
+    resolution: {integrity: sha512-QQtaxnoDJeAkDvDKWCLiwIXkTgRhwYDEQCghU9Z6q03iyek/rxRh/2lC3HB7P8sWT2xC/y5JDctPLBIGzHKbhw==}
+    engines: {node: '>=14'}
+    hasBin: true
 
   proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
@@ -2264,6 +2337,8 @@ snapshots:
   picomatch@2.3.1: {}
 
   picomatch@4.0.2: {}
+
+  prettier@3.5.3: {}
 
   proto-list@1.2.4: {}
 
