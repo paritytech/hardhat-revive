@@ -1,6 +1,6 @@
 {
   "name": "hardhat-revive",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "AGPL-3.0",
   "author": "Alberto Nicolás Penayo <alberto.penayo@parity.io>",
   "workspaces": [
