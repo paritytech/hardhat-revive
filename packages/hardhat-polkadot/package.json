@@ -34,6 +34,8 @@
         "@parity/hardhat-polkadot-resolc": "workspace:^"
     },
     "devDependencies": {
+        "@types/node": "^22.14.1",
+        "rimraf": "^6.0.1",
         "typescript": "^5.8.3"
     }
 }

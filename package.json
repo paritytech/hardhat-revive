@@ -2,7 +2,6 @@
   "name": "hardhat-revive",
   "version": "0.0.7",
   "license": "AGPL-3.0",
-  "packageManager": "yarn@4.4.1",
   "author": "Alberto Nicolás Penayo <alberto.penayo@parity.io>",
   "workspaces": [
     "packages/*"
@@ -14,5 +13,8 @@
   "bugs": "https://github.com/bee344/hardhat-revive/issues",
   "scripts": {
     "build": "tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1"
   }
 }
