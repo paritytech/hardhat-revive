@@ -9,26 +9,11 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
     "moduleResolution": "node",
-    "lib": [
-            "ES2022"
-        ],
+    "lib": ["ES2022"],
     "noImplicitAny": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "useUnknownInCatchVariables": true,
-    "types": [
-        "node"
-    ],
+    "types": ["node"]
   }
-}
-
-{
-    "compilerOptions": {
-        "baseUrl": ".",
-        "rootDir": "./src",
-        "outDir": "./dist",
-    },
-    "include": [
-        "./src/**/*.ts"
-    ]
 }
