@@ -1,16 +1,17 @@
 {
-  "name": "hardhat-revive",
+  "name": "root",
   "version": "0.0.8",
   "license": "AGPL-3.0",
-  "author": "Alberto Nicolás Penayo <alberto.penayo@parity.io>",
+  "packageManager": "yarn@4.4.1",
+  "author": "Parity Technologies <admin@parity.io>",
   "workspaces": [
     "packages/*"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/bee344/hardhat-revive.git"
+    "url": "https://github.com/paritytech/hardhat-revive.git"
   },
-  "bugs": "https://github.com/bee344/hardhat-revive/issues",
+  "bugs": "https://github.com/paritytech/hardhat-revive/issues",
   "scripts": {
     "build": "tsc --build packages/hardhat-polkadot packages/hardhat-revive-node packages/hardhat-resolc"
   },
