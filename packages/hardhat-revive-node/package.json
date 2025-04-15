@@ -3,7 +3,7 @@
   "packageManager": "yarn@4.4.1",
   "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
   "license": "AGPL-3.0",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "bugs": "https://github.com/bee344/hardhat-revive/issues",
   "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-revive-node#readme",
   "repository": {
@@ -33,6 +33,7 @@
   "dependencies": {
     "@types/debug": "^4",
     "@types/fs-extra": "^11.0.4",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
     "debug": "^4.4.0",
     "hardhat": "^2.22.17",
