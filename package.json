@@ -12,9 +12,10 @@
   },
   "bugs": "https://github.com/bee344/hardhat-revive/issues",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --build packages/hardhat-polkadot packages/hardhat-revive-node packages/hardhat-resolc"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1"
+    "@types/node": "^22.14.1",
+    "typescript": "^5.8.3"
   }
 }

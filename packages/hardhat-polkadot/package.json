@@ -6,8 +6,15 @@
     "homepage": "https://github.com/paritytech/hardhat-polkadot/tree/main/packages/hardhat-polkadot",
     "author": "Parity Technologies <admin@parity.io>",
     "license": "MIT",
-    "main": "dist/src/index.js",
-    "types": "dist/src/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "exports": {
+        ".": {
+        "require": "./dist/index.js",
+        "import": "./dist/index.js",
+        "types": "./dist/index.d.ts"
+        }
+    },
     "keywords": [
         "ethereum",
         "smart-contracts",
@@ -17,23 +24,26 @@
     ],
     "scripts": {
         "build": "tsc --build .",
+        "build:dev": "tsc --build . --watch",
         "clean": "rimraf dist"
+
     },
     "files": [
         "dist/src/",
         "src/",
+        "!**/*.tsbuildinfo",
         "LICENSE",
         "README.md"
     ],
     "dependencies": {
-        "@parity/hardhat-polkadot-node": "workspace:^",
-        "@parity/hardhat-polkadot-resolc": "workspace:^"
+        "@parity/hardhat-polkadot-node": "file:../hardhat-revive-node",
+        "@parity/hardhat-polkadot-resolc": "file:../hardhat-resolc"
     },
     "peerDependencies": {
-        "@parity/hardhat-polkadot-node": "workspace:^",
-        "@parity/hardhat-polkadot-resolc": "workspace:^"
+        "hardhat": "^2.22.18"
     },
     "devDependencies": {
+        "@types/mocha": "^10.0.10",
         "@types/node": "^22.14.1",
         "rimraf": "^6.0.1",
         "typescript": "^5.8.3"

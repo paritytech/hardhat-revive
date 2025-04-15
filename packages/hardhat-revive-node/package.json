@@ -37,5 +37,9 @@
     "hardhat": "^2.22.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "axios": "^1.8.4",
+    "chalk": "^5.4.1"
   }
 }
