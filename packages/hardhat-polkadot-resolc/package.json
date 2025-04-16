@@ -1,15 +1,14 @@
 {
-  "name": "hardhat-resolc",
-  "packageManager": "yarn@4.4.1",
-  "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
+  "name": "@parity/hardhat-polkadot-resolc",
+  "author": "Parity Technologies <admin@parity.io>",
   "license": "AGPL-3.0",
   "version": "0.0.8",
-  "bugs": "https://github.com/bee344/hardhat-revive/issues",
-  "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-resolc#readme",
+  "bugs": "https://github.com/paritytech/hardhat-polkadot/issues",
+  "homepage": "https://github.com/paritytech/hardhat-polkadot/tree/master/packages/hardhat-polkadot-resolc#readme",
   "repository": {
-    "directory": "packages/hardhat-resolc",
+    "directory": "packages/hardhat-polkadot-resolc",
     "type": "git",
-    "url": "https://github.com/bee344/hardhat-revive.git"
+    "url": "https://github.com/paritytech/hardhat-polkadot.git"
   },
   "main": "dist/index.js",
   "publishConfig": {
@@ -39,5 +38,8 @@
     "solc": "^0.8.28",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "chalk": "^5.4.1"
   }
 }

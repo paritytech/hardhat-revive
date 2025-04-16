@@ -3,3 +3,4 @@ node_modules/
 
 # Build files
 dist
+tsconfig.tsbuildinfo

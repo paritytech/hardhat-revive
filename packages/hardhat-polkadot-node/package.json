@@ -1,15 +1,14 @@
 {
-  "name": "hardhat-revive-node",
-  "packageManager": "yarn@4.4.1",
-  "author": "Alberto Nicolás Penayo <penayoalberto@outlook.com>",
+  "name": "@parity/hardhat-polkadot-node",
+  "author": "Parity Technologies <admin@parity.io>",
   "license": "AGPL-3.0",
   "version": "0.0.7",
-  "bugs": "https://github.com/bee344/hardhat-revive/issues",
-  "homepage": "https://github.com/bee344/hardhat-revive/tree/master/packages/hardhat-revive-node#readme",
+  "bugs": "https://github.com/paritytech/hardhat-polkadot/issues",
+  "homepage": "https://github.com/paritytech/hardhat-polkadot/tree/master/packages/hardhat-polkadot-node#readme",
   "repository": {
-    "directory": "packages/hardhat-revive-node",
+    "directory": "packages/hardhat-polkadot-node",
     "type": "git",
-    "url": "https://github.com/bee344/hardhat-revive.git"
+    "url": "https://github.com/paritytech/hardhat-polkadot.git"
   },
   "main": "dist/index.js",
   "publishConfig": {
@@ -39,5 +38,9 @@
     "hardhat": "^2.22.17",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2"
+  },
+  "devDependencies": {
+    "axios": "^1.8.4",
+    "chalk": "^5.4.1"
   }
 }
